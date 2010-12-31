@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @radio.name %>
+</p>
+
+<p>
+  <b>Website:</b>
+  <%= @radio.website %>
+</p>
+
+<p>
+  <b>Url:</b>
+  <%= @radio.url %>
+</p>
+
+<p>
+  <b>Gender:</b>
+  <%= @radio.gender %>
+</p>
+
+<p>
+  <b>Location:</b>
+  <%= @radio.location %>
+</p>
+
+<p>
+  <b>Country:</b>
+  <%= @radio.country %>
+</p>
+
+
+<%= link_to 'Edit', edit_radio_path(@radio) %> |
+<%= link_to 'Back', radios_path %>

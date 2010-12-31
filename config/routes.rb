@@ -1,4 +1,6 @@
 Radiogugu::Application.routes.draw do
+  resources :radios
+
   root :to => "home#index"
 
   # The priority is based upon order of creation:
