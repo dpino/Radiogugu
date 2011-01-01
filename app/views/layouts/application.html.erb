@@ -1,14 +1,65 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Radiogugu</title>
-  <%= stylesheet_link_tag :all %>
-  <%= javascript_include_tag :defaults %>
-  <%= csrf_meta_tag %>
-</head>
-<body style="background: #eee;">
 
-<%= yield %>
+	<!-- Meta -->
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<meta name="keywords" content="">
+	<meta name="description" content="">
+
+	<title>Radiogugu</title>
+
+	<!-- Include css & javascript -->
+	<%= stylesheet_link_tag :all %>
+	<%= javascript_include_tag :defaults %>
+	<%= csrf_meta_tag %>
+</head>
+
+<body>
+
+<div id="doc3" class="yui-t7">
+	<div id="hd">
+		<!-- Header -->
+		<div style="background: white">
+			<%= image_tag("radio_gugu_logo_mini.png") %>
+		</div>
+
+		<!-- Main menu -->
+		<div>
+			<form style="display: list">
+				<div style="display: inline; border: 1px solid black">
+					<span><%= link_to "Countries", radios_path %></span> |
+					<span><%= link_to "Gender", radios_path %></span> |
+				</div>
+				<input type="text" value="Search this site" />
+				<input type="submit" value="Go!" />
+			</form>
+		</div>
+
+	</div>
+	<div id="bd">
+		<div id="yui-main">
+			<div class="yui-b">
+				<!-- Main content -->
+				<%= yield %>
+			</div>
+		</div>
+
+		<!-- Secondary content -->
+		<div class="yui-b">
+			<div style="border: 1px solid black">
+				<span>About us...</p> <span>Copyright</span>
+			</div>
+		</div
+	</div>
+
+	<!-- Footer -->
+	<div id="ft">
+		<div style="border: 1px solid black">
+			<p>Copyright RadioGugu @ 2011</p>
+		</div>
+	</div>
+</div>
 
 </body>
 </html>
