@@ -1,4 +1,6 @@
 Radiogugu::Application.routes.draw do
+  resources :locations
+
   resources :radios
 
   root :to => "home#index"
