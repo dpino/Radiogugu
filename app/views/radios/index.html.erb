@@ -7,7 +7,6 @@
     <th>Url</th>
     <th>Gender</th>
     <th>Location</th>
-    <th>Country</th>
     <th></th>
     <th></th>
     <th></th>
@@ -19,8 +18,7 @@
     <td><%= radio.website %></td>
     <td><%= radio.url %></td>
     <td><%= radio.gender %></td>
-    <td><%= radio.location %></td>
-    <td><%= radio.country %></td>
+    <td><%= radio.location_id %></td>
     <td><%= link_to 'Show', radio %></td>
     <td><%= link_to 'Edit', edit_radio_path(radio) %></td>
     <td><%= link_to 'Destroy', radio, :confirm => 'Are you sure?', :method => :delete %></td>
