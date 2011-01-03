@@ -23,11 +23,11 @@ ActiveRecord::Schema.define(:version => 20110101211556) do
   create_table "radios", :force => true do |t|
     t.string   "name"
     t.string   "website"
-    t.string   "url",         :limit => 1024
     t.string   "gender"
-    t.integer  "location_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "url",         :limit => 1024
+    t.integer  "location_id"
   end
 
 end
