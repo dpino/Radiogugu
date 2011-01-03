@@ -28,7 +28,7 @@
 		<div>
 			<form style="display: list">
 				<div style="display: inline; border: 1px solid black">
-					<span><%= link_to "Countries", radios_path %></span> |
+					<span><%= link_to "Countries", :controller => "locations", :by_country => true %></span> |
 					<span><%= link_to "Gender", radios_path %></span> |
 				</div>
 				<input type="text" value="Search this site" />
