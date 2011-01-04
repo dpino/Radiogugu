@@ -10,6 +10,30 @@ class LocationsController < ApplicationController
     end
   end
 
+  # GET /locations/countries
+  # GET /locations/countries.xml
+  def countries
+    countries_and_continents = Location.select("distinct(country),continent").order("continent");
+    @countries_by_continent = to_hash(countries_and_continents);
+
+    respond_to do |format|
+      format.html # { render :action => "countries" }
+      format.xml  { render :xml => @countries_by_continent}
+    end
+  end
+
+  def to_hash(countries_and_continents)
+    result = Hash.new
+    countries_and_continents.each { |location|
+        continent = location[:continent]
+        if (result[continent] == nil)
+            result[continent] = Array.new
+        end
+        result[continent] << location[:country]
+    }
+    return result
+  end
+
   # GET /locations/1
   # GET /locations/1.xml
   def show

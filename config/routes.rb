@@ -1,9 +1,16 @@
 Radiogugu::Application.routes.draw do
-  resources :locations
 
-  resources :radios
+    resource :locations do
+		collection do
+			get 'countries'
+        end
+	end
 
-  root :to => "home#index"
+    resources :locations
+
+    resources :radios
+
+    root :to => "home#index"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

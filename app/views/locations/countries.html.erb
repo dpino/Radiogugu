@@ -1,0 +1,8 @@
+<% @countries_by_continent.map do |continent, countries| %>
+    <h2><%= continent %></h2>
+    <% countries.each do |country| %>
+        <span style="display: block"><%= link_to countries_path(country) %></span>
+    <% end %>
+<% end %>
+
+<br />
