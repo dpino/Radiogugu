@@ -1,16 +1,15 @@
 Radiogugu::Application.routes.draw do
 
-    resource :locations do
-		collection do
-			get 'countries'
-        end
-	end
-
     resources :locations
+
+	resources :countries
 
     resources :radios
 
     root :to => "home#index"
+
+#get 'locations/countries(.:format)' {:action=>"index", :controller=>"countries"}
+# get 'countries/.:id' => :nouveau_message, :as => 'nouveau_message'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
