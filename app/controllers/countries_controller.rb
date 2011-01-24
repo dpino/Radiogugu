@@ -57,7 +57,7 @@ class CountriesController < ApplicationController
         end
         result[continent] << location[:country]
     }
-    return result
+    return result.sort
   end
 
 end
