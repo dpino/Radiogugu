@@ -1,8 +1,10 @@
 <% @countries_by_continent.map do |continent, countries| %>
+	<div style="margin-left: 20px; float: left; width: 125px">
     <h2><%= continent %></h2>
     <% countries.each do |country| %>
         <span style="display: block"><%= link_to country, url_for(:controller => 'countries', :id => country) %></span>
     <% end %>
+	</div>
 <% end %>
 
 <br />
