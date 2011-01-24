@@ -1,35 +1,52 @@
-<p id="notice"><%= notice %></p>
+<h2><%= @radio.name %></h2>
 
-<p>
-  <b>Name:</b>
-  <%= @radio.name %>
-</p>
+<!-- Show breadcrum Continent >> Country >> Location -->
 
-<p>
-  <b>Website:</b>
-  <%= @radio.website %>
-</p>
+<div style="background: lightgray; border: solid 0px black; padding-bottom: 10px;" >
+    <form id="radio_data" method="post">
+        <div class="row">
+            <span class="label"><b>Website</b>:</span>&nbsp;
+            <span class="formw"><a href="<%= @radio.website %>"><%= @radio.website %></a></span>
+        </div>
+        <div class="row">
+            <span class="label"><b>Tags</b>:</span>&nbsp;
+            <span class="formw small"><%= @radio.gender %></span>
+        </div>
+        <div class="row">
+            <span class="label"><b>URL</b>:</span>&nbsp;
+            <span class="formw url"><%= @radio.url %></span>
+            <span class="formw"><input id="button_url_ok" type="button" value="OK"/></span>
+        </div>
+    </form>
+</div>
 
-<p>
-  <b>Url:</b>
-  <%= @radio.url %>
-</p>
+<br/>
 
-<p>
-  <b>Gender:</b>
-  <%= @radio.gender %>
-</p>
+<div id="radioplayer">
+    <object id="MediaPlayer"
+            codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=6,4,7,1112"
+            type="application/x-oleobject"
+            standby="Loading radio player..."
+            classid="CLSID:22D6f312-B0F6-11D0-94AB-0080C74C7E95"
+            height="50" width="150">
 
-<p>
-  <b>Location:</b>
-  <%= @radio.location %>
-</p>
+        <embed type="application/x-mplayer2"
+                pluginspage="http://www.microsoft.com/Windows/Downloads/Contents/Products/MediaPlayer/"
+                src="<%= @radio.url %>"
+                transparentatstart="0" autostart="1" animationatstart="1"
+                showcontrols="true" showaudiocontrols="1" showpositioncontrols="0"
+                autosize="0" showstatusbar="1" displaysize="false"
+                height="52" width="300">
+    </object>
+</div>
 
-<p>
-  <b>Country:</b>
-  <%= @radio.country %>
-</p>
+<hr/>
 
+<p>All comments (1180)<p>
+<form>
+    <textarea style="solid 1px black" rows="5" cols="74"></textarea>
+    <button type="submit" value="Accept" />
+</form>
 
-<%= link_to 'Edit', edit_radio_path(@radio) %> |
-<%= link_to 'Back', radios_path %>
+<%# link_to 'Edit', edit_radio_path(@radio) %> |
+<%# link_to 'Back', radios_path %>
