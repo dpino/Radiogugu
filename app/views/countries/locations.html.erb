@@ -1,3 +1,8 @@
-<% @locations.each do |location| %>
-	<h3><%= location.location %></h3>
+<% @radios_by_location.map do |city, radios| %>
+	<h3><%= city %></h3>
+		<ul>
+		<% radios.each do |radio| %>
+			<li><%= link_to radio.name, radio %></li>
+		<% end %>
+		</ul>
 <% end %>
