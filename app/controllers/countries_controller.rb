@@ -9,7 +9,7 @@ class CountriesController < ApplicationController
         return
       end
       countries_and_continents = Location.select("distinct(country),continent").order("continent");
-      @countries_by_continent = to_hash(countries_and_continents);
+      @countries_by_continent = to_countries_by_continent(countries_and_continents);
 
       respond_to do |format|
           format.html # { render :action => "countries" }
@@ -18,10 +18,10 @@ class CountriesController < ApplicationController
   end
 
   def _show(country)
-    @country = Location.where("country = ?", country)
+    @locations = Location.where("country = ?", country)
 
     respond_to do |format|
-        format.html { render :action => "country" }
+        format.html { render :action => "locations" }
         format.xml  { render :xml => @countries.errors, :status => :unprocessable_entity }
     end
   end
@@ -29,7 +29,6 @@ class CountriesController < ApplicationController
   # GET /locations/countries
   # GET /locations/countries.xml
   def show
-    country = params[:id]
     @country = Location.where("country = ?", country)
 
     respond_to do |format|
@@ -38,7 +37,11 @@ class CountriesController < ApplicationController
     end
   end
 
-  def to_hash(countries_and_continents)
+  def cities_by_country(locations)
+
+  end
+
+  def to_countries_by_continent(countries_and_continents)
     result = Hash.new
     countries_and_continents.each { |location|
         continent = location[:continent]
