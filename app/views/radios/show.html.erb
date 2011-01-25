@@ -1,6 +1,8 @@
 <h2><%= @radio.name %></h2>
 
 <!-- Show breadcrum Continent >> Country >> Location -->
+<%= location_breadcrumb(@radio.location_id) %>
+<br/><br/>
 
 <div style="background: lightgray; border: solid 0px black; padding-bottom: 10px;" >
     <form id="radio_data" method="post">
