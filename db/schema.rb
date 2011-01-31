@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110101211556) do
+ActiveRecord::Schema.define(:version => 20110126233652) do
 
   create_table "locations", :force => true do |t|
     t.string   "location"
@@ -29,5 +29,15 @@ ActiveRecord::Schema.define(:version => 20110101211556) do
     t.string   "url",         :limit => 1024
     t.integer  "location_id"
   end
+
+  create_table "ratings", :force => true do |t|
+    t.integer  "rating",                      :default => 0
+    t.datetime "created_at",                                  :null => false
+    t.string   "rateable_type", :limit => 15, :default => "", :null => false
+    t.integer  "rateable_id",                 :default => 0,  :null => false
+    t.integer  "radio_id",                    :default => 0,  :null => false
+  end
+
+  add_index "ratings", ["radio_id"], :name => "fk_ratings_radio"
 
 end

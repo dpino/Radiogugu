@@ -1,7 +1,7 @@
 <h2><%= @radio.name %></h2>
 
 <!-- Show breadcrum Continent >> Country >> Location -->
-<%= location_breadcrumb(@radio.location_id) %>
+<b><%= location_breadcrumb(@radio.location_id) %></b>
 <br/><br/>
 
 <div style="background: lightgray; border: solid 0px black; padding-bottom: 10px;" >
@@ -41,6 +41,8 @@
                 height="52" width="300">
     </object>
 </div>
+
+<%= render :partial => "ratings/rate", :locals => { :asset => @radio } %>
 
 <hr/>
 

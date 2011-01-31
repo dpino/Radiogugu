@@ -1,5 +1,7 @@
 Radiogugu::Application.routes.draw do
 
+  get "ratings/rate"
+
     resources :locations
 
 	resources :countries
