@@ -1,16 +1,24 @@
+<%
+    comment = Comment.new
+     rating = Rating.new(:rating => 1)
+     comment.add_rating(rating)
+%>
+
+<%# comment.ratings.size %>
+
 <h2>Most popular this week</p>
 <ul>
-	<li>Radio 1</li>
-	<li>Radio 2</li>
-	<li>Radio 3</li>
-	<li>Radio 4</li>
-	<li>Radio 5</li>
+    <li>Radio 1</li>
+    <li>Radio 2</li>
+    <li>Radio 3</li>
+    <li>Radio 4</li>
+    <li>Radio 5</li>
 </ul>
 <h2>Most popular country</p>
 <ul>
-	<li>Japan</li>
-	<li>Spain</li>
-	<li>UK</li>
-	<li>USA</li>
-	<li>Italy</li>
+    <li>Japan</li>
+    <li>Spain</li>
+    <li>UK</li>
+    <li>USA</li>
+    <li>Italy</li>
 </ul>

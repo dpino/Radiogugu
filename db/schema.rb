@@ -10,7 +10,14 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110126233652) do
+ActiveRecord::Schema.define(:version => 20110131232452) do
+
+  create_table "comments", :force => true do |t|
+    t.string   "title"
+    t.text     "body"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "locations", :force => true do |t|
     t.string   "location"
@@ -35,9 +42,9 @@ ActiveRecord::Schema.define(:version => 20110126233652) do
     t.datetime "created_at",                                  :null => false
     t.string   "rateable_type", :limit => 15, :default => "", :null => false
     t.integer  "rateable_id",                 :default => 0,  :null => false
-    t.integer  "radio_id",                    :default => 0,  :null => false
+    t.integer  "user_id",                     :default => 0,  :null => false
   end
 
-  add_index "ratings", ["radio_id"], :name => "fk_ratings_radio"
+  add_index "ratings", ["user_id"], :name => "fk_ratings_user"
 
 end
