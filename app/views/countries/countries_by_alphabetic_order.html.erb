@@ -1,0 +1,9 @@
+<% @countries_by_letter.map do |letter, countries| %>
+  <h2 style="color: red"><%= letter %></h2>
+  <hr/>
+  <% countries.each do |country| %>
+    <p><%= link_to country.country, countries_url(country) %> (<%= country.total %>)</p>
+  <% end %>
+<% end %>
+
+<br />
