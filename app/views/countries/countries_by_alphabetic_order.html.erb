@@ -1,8 +1,26 @@
+<!-- Sort options -->
+<br/>
+<div>
+  <span style="display: block">Sort by:</span>
+  <span style="display: block"><b>Alphabetic</b></span>
+  <span style="display: block"><%= link_to "By continent", countries_path %></span>
+</div>
+
+<!-- Menu -->
+<br/>
+<div>
 <% @countries_by_letter.map do |letter, countries| %>
-  <h2 style="color: red"><%= letter %></h2>
+  <span><a href="#<%= letter %>"><%= letter %></a></span>
+<% end %>
+</div>
+
+<% @countries_by_letter.map do |letter, countries| %>
+  <a name="<%= letter %>">
+    <h2 style="color: red"><%= letter %></h2>
+  </a>
   <hr/>
   <% countries.each do |country| %>
-    <p><%= link_to country.country, countries_url(country) %> (<%= country.total %>)</p>
+    <p><%= link_to country.country, url_for(:controller => 'countries', :id => country.country) %> (<%= country.total %>)</p>
   <% end %>
 <% end %>
 
