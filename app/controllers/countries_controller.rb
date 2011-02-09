@@ -9,8 +9,8 @@ class CountriesController < ApplicationController
       return
     end
 
-    order = params[:order]
-    if order != nil && order == "alphabetic"
+    @sort_order = get_order(params[:order])
+    if @sort_order == :alphabetic
       countries_by_alphabetic_order()
       return
     end
@@ -21,6 +21,17 @@ class CountriesController < ApplicationController
     respond_to do |format|
         format.html # { render :action => "countries" }
         format.xml  { render :xml => @countries_by_continent}
+    end
+  end
+
+  def get_order(order)
+    if order != nil
+      if order == "alphabetic"
+        return :alphabetic
+      end
+      if order == "by_continent"
+        return :by_continent
+      end
     end
   end
 
