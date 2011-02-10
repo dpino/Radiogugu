@@ -1,13 +1,9 @@
 <!-- Sort options -->
 <%= render 'search_options' %>
 
-<!-- Menu -->
+<!-- Navigation menu -->
 <br/>
-<div>
-<% @countries_by_letter.map do |letter, countries| %>
-  <span><a href="#<%= letter %>"><%= letter %></a></span>
-<% end %>
-</div>
+<%= render 'menu_letters' %>
 
 <% @countries_by_letter.map do |letter, countries| %>
   <a name="<%= letter %>">

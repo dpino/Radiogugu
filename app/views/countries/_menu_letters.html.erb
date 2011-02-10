@@ -1,0 +1,5 @@
+<div>
+<% @countries_by_letter.map do |letter, countries| %>
+  <span><a href="#<%= letter %>"><%= letter %></a></span>
+<% end %>
+</div>

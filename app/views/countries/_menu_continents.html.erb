@@ -1,0 +1,5 @@
+<div>
+<% @countries_by_continent.map do |continent, countries| %>
+  <span><a href="#<%= continent %>"><%= continent %></a> | </span>
+<% end %>
+</div>

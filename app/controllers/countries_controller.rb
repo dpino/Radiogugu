@@ -15,12 +15,21 @@ class CountriesController < ApplicationController
       return
     end
 
+    if @sort_order == :continent
+      countries_by_continent_order()
+      return
+    end
+
+    # Default
+    countries_by_alphabetic_order()
+  end
+
+  def countries_by_continent_order()
     countries_and_continents = Location.select("distinct(country),continent").order("continent")
     @countries_by_continent = to_countries_by_continent(countries_and_continents)
-
     respond_to do |format|
-        format.html # { render :action => "countries" }
-        format.xml  { render :xml => @countries_by_continent}
+      format.html # { render :action => "countries" }
+      format.xml  { render :xml => @countries_by_continent}
     end
   end
 
@@ -29,8 +38,8 @@ class CountriesController < ApplicationController
       if order == "alphabetic"
         return :alphabetic
       end
-      if order == "by_continent"
-        return :by_continent
+      if order == "continent"
+        return :continent
       end
     end
   end
