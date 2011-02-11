@@ -3,7 +3,7 @@
 alphabetic = link_to "Alphabetic", countries_path(@country, :order => "alphabetic")
 by_continent = link_to "By continent", countries_path(@country, :order => "continent")
 
-if (@sort_order == :alphabetic)
+if (@sort_order == nil or @sort_order == :alphabetic)
   alphabetic = raw("<b>Alphabetic</b>")
 end
 
@@ -14,7 +14,7 @@ end
 %>
 
 <br/>
-<div>
+<div id="search_options">
   <span style="display: block">Sort by:</span>
   <span style="display: block"><%= alphabetic %></span>
   <span style="display: block"><%= by_continent %></span>
