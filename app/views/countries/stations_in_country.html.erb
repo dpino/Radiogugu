@@ -6,7 +6,7 @@
   <a name="<%= key %>">
     <h3 style="color: red"><%= key %></h3>
   </a>
-  <ul>
+  <ul class="stations-list">
     <%
       stations.sort! { |a,b| a.name.downcase <=> b.name.downcase }
       stations.each do |station| %>
