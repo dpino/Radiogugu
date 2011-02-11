@@ -6,3 +6,15 @@ ul.stations-list {
 ul.stations-list > li {
   list-style-image: url("img/arrow.png");
 }
+
+div.stations-nav-menu {
+  margin-top: 5px;
+  padding: 2px 2px;
+  // background: lightgray;
+}
+
+div.stations-nav-menu a {
+  text-decoration: none;
+  color: #53a3f6;
+  // color: blue;
+}
