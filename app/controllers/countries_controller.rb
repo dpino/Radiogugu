@@ -42,6 +42,9 @@ class CountriesController < ApplicationController
       if order == "continent"
         return :continent
       end
+      if order == "location"
+        return :location
+      end
     end
   end
 
@@ -67,12 +70,17 @@ class CountriesController < ApplicationController
   end
 
   def stations_in_country(country)
-    @locations = Location.select("id, location").where("country = ?", country).order("location")
+    locations = Location.select("id, location").where("country = ?", country).order("location")
 
-    if @sort_order = :alphabetic
-      @stations = to_stations_in_alphabetic_order(@locations)
-    else 
-      @stations = to_stations_by_location(@locations)
+    # Default order
+    if @sort_order == nil
+      @sort_order = :location
+    end
+
+    if @sort_order == :location
+      @stations = to_stations_by_location(locations)
+    else
+      @stations = to_stations_in_alphabetic_order(locations)
     end
 
     respond_to do |format|
@@ -96,10 +104,10 @@ class CountriesController < ApplicationController
     return result.sort
   end
 
-  def to_stations_by_location(country) 
+  def to_stations_by_location(locations)
     result = Hash.new
     locations.each {|location|
-      stations = station.where("location_id = ?", location[:id])
+      stations = Radio.where("location_id = ?", location[:id])
       city = location[:location]
       result[city] = stations
     }

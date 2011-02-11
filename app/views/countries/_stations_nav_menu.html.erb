@@ -1,0 +1,11 @@
+<br/>
+<div>
+<% 
+  if (@sort_order == :location)
+    separator = " | ";
+  end
+
+  @stations.map do |key, values| %>
+    <span><a href="#<%= key %>"><%= key %></a><%= separator %></span>
+  <% end %>
+</div>
