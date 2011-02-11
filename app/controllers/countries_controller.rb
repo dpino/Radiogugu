@@ -4,12 +4,13 @@ class CountriesController < ApplicationController
   # GET /locations.xml
   def index
     country = params[:id]
+    @sort_order = get_order(params[:order])
+
     if country != nil && country.size() > 0
-      show_country(country)
+      stations_in_country(country)
       return
     end
 
-    @sort_order = get_order(params[:order])
     if @sort_order == :alphabetic
       countries_by_alphabetic_order()
       return
@@ -65,22 +66,42 @@ class CountriesController < ApplicationController
     return result.sort
   end
 
-  def show_country(country)
+  def stations_in_country(country)
     @locations = Location.select("id, location").where("country = ?", country).order("location")
-      @radios_by_location = to_radios_by_location(@locations)
+
+    if @sort_order = :alphabetic
+      @stations = to_stations_in_alphabetic_order(@locations)
+    else 
+      @stations = to_stations_by_location(@locations)
+    end
 
     respond_to do |format|
-        format.html { render :action => "locations" }
+        format.html { render :action => "stations_in_country" }
         format.xml  { render :xml => @countries.errors, :status => :unprocessable_entity }
     end
   end
 
-  def to_radios_by_location(locations)
+  def to_stations_in_alphabetic_order(locations)
     result = Hash.new
     locations.each {|location|
-        radios = Radio.where("location_id = ?", location[:id])
-        city = location[:location]
-        result[city] = radios
+      stations = Radio.where("location_id = ?", location[:id])
+      stations.each {|station|
+        letter = station.name[0,1]
+        if (result[letter] == nil)
+          result[letter] = Array.new
+        end
+        result[letter] << station
+      }
+    }
+    return result.sort
+  end
+
+  def to_stations_by_location(country) 
+    result = Hash.new
+    locations.each {|location|
+      stations = station.where("location_id = ?", location[:id])
+      city = location[:location]
+      result[city] = stations
     }
     return result.sort
   end
