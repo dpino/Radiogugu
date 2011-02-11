@@ -3,26 +3,24 @@ class CountriesController < ApplicationController
   # GET /locations
   # GET /locations.xml
   def index
-    country = params[:id]
+    @country = params[:id]
     @sort_order = get_order(params[:order])
 
-    if country != nil && country.size() > 0
-      stations_in_country(country)
+    if @country != nil && @country.size() > 0
+      stations_in_country(@country)
       return
+    end
+
+    # Default order
+    if @sort_order == nil
+      @sort_order = :alphabetic
     end
 
     if @sort_order == :alphabetic
       countries_by_alphabetic_order()
-      return
-    end
-
-    if @sort_order == :continent
+    else
       countries_by_continent_order()
-      return
     end
-
-    # Default
-    countries_by_alphabetic_order()
   end
 
   def countries_by_continent_order()
@@ -74,7 +72,7 @@ class CountriesController < ApplicationController
 
     # Default order
     if @sort_order == nil
-      @sort_order = :location
+      @sort_order = :alphabetic
     end
 
     if @sort_order == :location

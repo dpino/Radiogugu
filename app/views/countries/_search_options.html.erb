@@ -1,14 +1,23 @@
 <%
 
-alphabetic = link_to "Alphabetic", countries_path(@country, :order => "alphabetic")
-by_continent = link_to "By continent", countries_path(@country, :order => "continent")
+if @country != nil
+  option1 = link_to "Alphabetic", url_for(:controller => 'countries', :id => @country, :order => "alphabetic")
+  option2 = link_to "By location", url_for(:controller => 'countries', :id => @country, :order => "location")
+else
+  option1 = link_to "Alphabetic", countries_path(@country, :order => "alphabetic")
+  option2 = link_to "By continent", countries_path(@country, :order => "continent")
+end
 
-if (@sort_order == nil or @sort_order == :alphabetic)
-  alphabetic = raw("<b>Alphabetic</b>")
+if (@sort_order == :alphabetic)
+  option1 = raw("<b>Alphabetic</b>")
 end
 
 if (@sort_order == :continent)
-  by_continent = raw("<b>By continent</b>")
+  option2 = raw("<b>By continent</b>")
+end
+
+if (@sort_order == :location)
+  option2 = raw("<b>By location</b>")
 end
 
 %>
@@ -16,6 +25,6 @@ end
 <br/>
 <div id="search_options">
   <span style="display: block">Sort by:</span>
-  <span style="display: block"><%= alphabetic %></span>
-  <span style="display: block"><%= by_continent %></span>
+  <span style="display: block"><%= option1 %></span>
+  <span style="display: block"><%= option2 %></span>
 </div>
