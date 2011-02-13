@@ -5,6 +5,7 @@ class CountriesController < ApplicationController
   def index
     @country = params[:id]
     @sort_order = get_order(params[:order])
+    session[:sort_order] = @sort_order
 
     if @country != nil && @country.size() > 0
       stations_in_country(@country)
@@ -33,16 +34,19 @@ class CountriesController < ApplicationController
   end
 
   def get_order(order)
-    if order != nil
-      if order == "alphabetic"
-        return :alphabetic
-      end
-      if order == "continent"
-        return :continent
-      end
-      if order == "location"
-        return :location
-      end
+    # Default
+    if order == nil
+      return :alphabetic
+    end
+
+    if order == "alphabetic"
+      return :alphabetic
+    end
+    if order == "continent"
+      return :continent
+    end
+    if order == "location"
+      return :location
     end
   end
 

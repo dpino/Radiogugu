@@ -2,20 +2,31 @@ module ApplicationHelper
 
 DOUBLE_ARROW = " >> "
 
-def location_breadcrumb(location_id)
-    location = Location.find(location_id)
+def location_breadcrumb(station)
+  location = Location.find(station.location_id)
+  order = session[:sort_order]
 
-    continent = location[:continent]
-    continent_url = link_to continent, url_for(:controller => "countries", :order => "continent") + "##{continent}"
+  continent_url = continent_url(location[:continent])
+  country_url = country_url(location[:country], order)
+  location_url = location_url(location[:location], station.name, location[:country], order)
 
-    country = location[:country]
-    country_url = link_to country, url_for(:controller => "countries", :id => country)
+  return continent_url + DOUBLE_ARROW + country_url + DOUBLE_ARROW + location_url + DOUBLE_ARROW + station.name
+end
 
-    location = location[:location]
-    # FIXME: The generated URL depdens on the sort order, need to store it in the session
-    location_url = link_to location, url_for(:controller => "countries", :order => "location", :id=> country) + "#" + location
+def continent_url(continent)
+  return link_to continent, url_for(:controller => "countries", :order => "continent") + "##{continent}"
+end
 
-    return continent_url + DOUBLE_ARROW + country_url + DOUBLE_ARROW + location_url
+def country_url(country, order)
+  return link_to country, url_for(:controller => "countries", :order => order, :id => country)
+end
+
+def location_url(location, station_name, country, order)
+  if order == :alphabetic
+    return link_to location, url_for(:controller => "countries", :order => "alphabetic", :id => country) + "#" + station_name[0,1]
+  else
+    return link_to location, url_for(:controller => "countries", :order => "location", :id => country) + "#" + location
+  end
 end
 
 end
