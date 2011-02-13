@@ -18,3 +18,28 @@ div.stations-nav-menu a {
   color: #53a3f6;
   // color: blue;
 }
+
+div.ad-panel {
+  border-left: 1px solid black;
+  padding-left: 5px;
+  margin-top: -280px;
+  margin-right: 400px;
+  margin-bottom: 5px;
+  float: right;
+}
+
+div.ad {
+  font-size: 10px;
+}
+
+div.ad span {
+  display: block;
+}
+
+div.ad a.title {
+  text-decoration: none;
+}
+
+div.ad span.link {
+  color: green;
+}

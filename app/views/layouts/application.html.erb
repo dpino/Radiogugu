@@ -26,8 +26,9 @@
 
 		<!-- Main menu -->
 		<div>
-			<form style="display: list">
+      <form style="display: list">
 				<div style="display: inline; border: 1px solid black">
+          <span><%= link_to "Home", url_for(:controller => 'home') %></span> |
 					<span><%= link_to "Countries", countries_path %></span> |
 					<span><%= link_to "Gender", radios_path %></span> |
 				</div>
@@ -35,8 +36,8 @@
 				<input type="submit" value="Go!" />
 			</form>
 		</div>
-
 	</div>
+
 	<div id="bd">
 		<div id="yui-main">
 			<div class="yui-b">
