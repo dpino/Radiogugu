@@ -3,15 +3,18 @@
 
 <!-- Navigation menu -->
 <br/>
+<a name="countries"></a>
 <%= render 'menu_letters' %>
 
+<br/>
+
 <% @countries_by_letter.map do |letter, countries| %>
-  <a name="<%= letter %>">
-    <h2 style="color: red"><%= letter %></h2>
-  </a>
+  <a name="<%= letter %>"> </a>
+  <h2 style="color: red; display: inline"><%= letter %></h2>
+  <a href="#countries"><small>[return]</small></a>
   <hr/>
   <% countries.each do |country| %>
-    <p><%= link_to country.country, url_for(:controller => 'countries', :id => country.country) %> (<%= country.total %>)</p>
+    <p><%= link_to country.country, url_for(:controller => 'countries', :id => country.country) %></p>
   <% end %>
 <% end %>
 

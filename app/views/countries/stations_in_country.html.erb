@@ -4,10 +4,13 @@
 <!-- Show menu -->
 <%= render 'stations_nav_menu' %>
 
+<br/>
 <% @stations.map do |key, stations| %>
-  <a name="<%= key %>">
-    <h3 style="color: red"><%= key %></h3>
-  </a>
+  <a name="<%= key %>"></a>
+  <div class="margin-top:18px">
+    <span style="font-size: 18px; color: red"><%= key %> </span>
+    <a style="font-size: 10px" href="#stations-nav-menu">[return]</a>
+  </div>
   <ul class="stations-list">
     <%
       stations.sort! { |a,b| a.name.downcase <=> b.name.downcase }

@@ -1,0 +1,47 @@
+body {
+  margin: 0px;
+  color: black;
+}
+
+div.menubar {
+  background: black;
+  width: 100%;
+  padding: 8px 5px;
+  font: Arial 12px ;
+  margin-right: 5px;
+}
+
+div.menubar a {
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+div.menubar form {
+  float: right;
+  margin-top: -3px;
+  margin-right: 15px;
+}
+
+div.yui-b {
+  background: white;
+  padding-top: 10px;
+  padding-bottom: 15px;
+}
+
+#hd {
+  background: #04045a;
+  padding: 6px;
+  width: 100%;
+}
+
+#ft {
+  background: black;
+  color: gray;
+  margin-top: 10px;
+}
+
+#contact-list span {
+  display: block;
+  margin-left: 15px;
+}

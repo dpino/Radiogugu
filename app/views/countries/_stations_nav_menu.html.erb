@@ -1,10 +1,41 @@
+<a name="stations-nav-menu"></a>
 <div class="stations-nav-menu">
-<% 
-  if (@sort_order == :location)
-    separator = " | ";
-  end
+  <%
+    if (@sort_order == :location)
+      order_label = "Location: "
+    else
+      order_label = "Radio station: "
+    end
+  %>
 
-  @stations.map do |key, values| %>
-    <span><a href="#<%= key %>"><%= key %></a><%= separator %></span>
-  <% end %>
+  <span style="display: block; font-weight: bold"><%= order_label %></span>
+
+  <%
+    separator = (@sort_order == :location) ? " | " : " ";
+
+    stations_links = Array.new
+    if (@sort_order == :alphabetic)
+      # Get keys, don't know why stations.keys doesn't work
+      keys = Array.new
+      @stations.map do |key, value|
+        keys << key
+      end
+
+      "A".upto("Z") do |letter|
+        if (keys.include?(letter))
+          stations_links <<  "<a href='##{letter}'>#{letter}</a>"
+        else
+          stations_links << "<span>#{letter}</span>"
+        end
+      end
+    else
+      @stations.map do |key, value|
+        stations_links << "<a href='##{key}'>#{key}</a>"
+      end
+      stations_links.sort
+    end
+  %>
+
+  <%= item_list = stations_links.join(separator).html_safe %>
+
 </div>

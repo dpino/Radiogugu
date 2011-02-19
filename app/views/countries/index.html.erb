@@ -3,12 +3,15 @@
 
 <!-- Navigation menu -->
 <br/>
+<a name="continents"></a>
 <%= render 'menu_continents' %>
 
 <% @countries_by_continent.map do |continent, countries| %>
-  <a name="<%= continent %>">
-    <h2 style="color: red"><%= continent %></h2>
-  </a>
+  <a name="<%= continent %>"></a>
+  <div style="margin-top: 18px">
+    <span style="color: red; font-size: 18px"><%= continent %></span>
+    <span style="font-size: 10px"><a href="#continents">[return]</a></span>
+  </div>
   <hr/>
   <% countries.each do |country| %>
     <span style="display: block"><%= link_to country, url_for(:controller => 'countries', :id => country) %></span>

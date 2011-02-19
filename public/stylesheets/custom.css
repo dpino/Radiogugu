@@ -1,3 +1,4 @@
+// Radio stations
 ul.stations-list {
   list-style-position: inside;
   padding: 0 0 5px 0;
@@ -10,13 +11,11 @@ ul.stations-list > li {
 div.stations-nav-menu {
   margin-top: 12px;
   padding: 2px 2px;
-  // background: lightgray;
 }
 
 div.stations-nav-menu a {
   text-decoration: none;
   color: #53a3f6;
-  // color: blue;
 }
 
 div.ad-panel {

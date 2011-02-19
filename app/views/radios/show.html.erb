@@ -4,22 +4,22 @@
 <b><%= location_breadcrumb(@radio) %></b>
 <br/><br/>
 
-<div style="background: lightgray; border: solid 0px black; padding-bottom: 10px;" >
-    <form id="radio_data" method="post">
-        <div class="row">
-            <span class="label"><b>Website</b>:</span>&nbsp;
-            <span class="formw"><a href="<%= @radio.website %>"><%= @radio.website %></a></span>
-        </div>
-        <div class="row">
-            <span class="label"><b>Tags</b>:</span>&nbsp;
-            <span class="formw small"><%= @radio.gender %></span>
-        </div>
-        <div class="row">
-            <span class="label"><b>URL</b>:</span>&nbsp;
-            <span class="formw url"><%= @radio.url %></span>
-            <span class="formw"><input id="button_url_ok" type="button" value="OK"/></span>
-        </div>
-    </form>
+<div style="background: lightgray; border: 1px dotted black; width: 600px;">
+    <table>
+      <tr>
+        <td><b>Website</b>:</td>
+        <td><a href="<%= @radio.website %>"><%= @radio.website %></a></td>
+      </tr>
+      <tr>
+        <td><b>Tags</b>:</td>
+        <td><%= @radio.gender %></td>
+      </tr>
+      <tr>
+        <td><b>URL</b>:</td>
+        <td><%= @radio.url %></td>
+        <!-- <span class="formw"><input id="button_url_ok" type="button" value="OK"/></span> -->
+      </tr>
+    </table>
 </div>
 
 <br/>
