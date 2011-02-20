@@ -42,3 +42,26 @@ div.ad a.title {
 div.ad span.link {
   color: green;
 }
+
+#radio-station-data {
+  background: lightgray;
+  border: 1px dotted black;
+  width: 600px;
+}
+
+#radio-station-data table {
+  border: 0px solid black;
+  width: 100%
+}
+
+#radio-station-data table input[type="text"] {
+  border: 1px solid black;
+  width: 400px;
+}
+
+#radio-station-data-edit {
+  float: right;
+  font-size: 10px;
+  margin-top: -15px;
+  margin-right: -4px
+}

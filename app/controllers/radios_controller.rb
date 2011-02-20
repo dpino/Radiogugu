@@ -62,9 +62,11 @@ class RadiosController < ApplicationController
       if @radio.update_attributes(params[:radio])
         format.html { redirect_to(@radio, :notice => 'Radio was successfully updated.') }
         format.xml  { head :ok }
+        format.json { render :json => @radio, :status => :ok }
       else
         format.html { render :action => "edit" }
         format.xml  { render :xml => @radio.errors, :status => :unprocessable_entity }
+        format.json { render :json => @radio, :status => :ok }
       end
     end
   end
