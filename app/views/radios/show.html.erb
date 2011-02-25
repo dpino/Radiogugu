@@ -47,11 +47,4 @@
 
 <hr/>
 
-<p>All comments (1180)<p>
-<form>
-    <textarea class="comment"></textarea>
-    <input style="display: block" type="submit" value="Accept" />
-</form>
-
-<%# link_to 'Edit', edit_radio_path(@radio) %>
-<%# link_to 'Back', radios_path %>
+<%= render :partial => "comments/comments" %>
