@@ -23,7 +23,8 @@ $(document).ready(function() {
       data: {_method:'PUT', radio: radio},
       dataType: 'json',
       success: function(msg) {
-        alert("Data Saved: " + msg );
+        $('#radio-station-data').animate({backgroundColor:"yellow"},  100);
+        $('#radio-station-data').animate({backgroundColor:"#d3d3d3" },  1000);
       }
     });
   }
