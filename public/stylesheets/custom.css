@@ -65,3 +65,13 @@ div.ad span.link {
   margin-top: -15px;
   margin-right: -4px
 }
+
+textarea.comment {
+  width: 480px;
+  height: 120px;
+  border: 3px solid #cccccc;
+  padding: 5px;
+  font-family: "Tahoma", "sans-serif";
+  border: solid 1px black
+}
+
