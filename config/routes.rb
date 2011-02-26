@@ -2,13 +2,15 @@ Radiogugu::Application.routes.draw do
 
   get "ratings/rate"
 
-    resources :locations
+  resources :locations
 
 	resources :countries
 
-    resources :radios
+  resources :radios do
+    resource :comments
+  end
 
-    root :to => "home#index"
+  root :to => "home#index"
 
 #get 'locations/countries(.:format)' {:action=>"index", :controller=>"countries"}
 # get 'countries/.:id' => :nouveau_message, :as => 'nouveau_message'

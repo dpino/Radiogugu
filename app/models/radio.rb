@@ -4,4 +4,5 @@ class Radio < ActiveRecord::Base
 	validates :url, :presence => true
 
 	belongs_to :location
+  has_many :comments
 end

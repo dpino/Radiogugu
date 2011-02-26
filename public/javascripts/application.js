@@ -57,3 +57,7 @@ $(document).ready(function() {
   }
 
 });
+
+function htmlEncode(value){
+    return $('<div/>').text(value).html();
+}

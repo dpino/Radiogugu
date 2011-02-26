@@ -1,5 +1,54 @@
 <p>All comments (1180)<p>
+
+
+<!-- Show all comments -->
+
 <form>
-  <textarea class="comment"></textarea>
-  <input style="display: block" type="submit" value="Accept" />
+  <textarea id="comment-to-add" class="comment"></textarea>
+  <div>
+    <a href="javascript:cancelComment()">Cancel</a><span> or </span>
+    <input type="button" value="Accept" onClick="javascript:addComment()" />
+  </div>
 </form>
+
+<div id="new-comments">
+</div>
+
+<div id="saved-comments">
+</div>
+
+<script>
+
+function cancelComment() {
+  $('#comment-to-add').val('');
+}
+
+function addComment() {
+  var body = $('#comment-to-add').val();
+  var radio_id = $('#radio-station-data-edit').attr('name');
+  var comment = {'body': body};
+
+  $('#comment-to-add').val('');
+
+  $.ajax({
+      type: "POST",
+      url: '/radios/###radio_id###/comments/'.replace('###radio_id###', radio_id),
+      data: {comment: comment},
+      dataType: 'json',
+      success: function(msg) {
+        var new_comment = $(htmlForComment(comment));
+
+        $('#new-comments').prepend(new_comment);
+        $(new_comment).animate({backgroundColor:"yellow"},  100);
+        $(new_comment).animate({backgroundColor:"white"},  1000);
+      }
+    });
+}
+
+function htmlForComment(comment) {
+  var body = htmlEncode(comment.body);
+  var body = body.replace(/\n\r?/g, '<br/>');
+  return "<div>###BODY###</div>".replace("###BODY###", body);
+}
+
+</script>
