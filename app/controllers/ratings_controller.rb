@@ -1,13 +1,17 @@
 class RatingsController < ApplicationController
 
 	def rate
-		@asset = Radio.find(params[:id])
-		Rating.delete_all(["rateable_type = 'Radio' AND rateable_id = ?", @asset.id)
-		@asset.add_rating Rating.new(:rating => params[:rating])
 
-		render :update do |page|
-			page.replace_html "star-ratings-block-#{rateable.id}", :partial => "rate", :locals => { :asset => rateable }
-			page.visual_effect :highlight, "star-ratings-block-#{rateable.id}"
+    rateable = Radio.find(params[:id])
+
+    # Delete the old ratings for current user
+    Rating.delete_all(["rateable_type = ? AND rateable_id = ? AND user_id = ?", Radio.base_class.to_s, params[:id], current_user.id])
+    rateable.add_rating Rating.new(:rating => params[:rating], :user_id => current_user.id)
+
+    respond_to do |format|
+      format.json { render :json => rateable.rating, :status => :ok }
+    end
+
 	end
 
 end

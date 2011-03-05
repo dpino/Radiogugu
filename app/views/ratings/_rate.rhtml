@@ -1,0 +1,42 @@
+<span id="average-rating"><%= number_with_precision(asset.rating, :precision => 1) %></span>/5 Stars
+
+<ul class='star-rating small-star'>
+    <li>
+        <%= link_to("1", "#", :onclick => "javascript:rateRadio(" + asset.id.to_s() + ", 1)",
+            :class => 'one-star', :name => '1 star out of 5') %>
+    </li>
+    <li>
+        <%= link_to("2", "#", :onclick => "javascript:rateRadio(" + asset.id.to_s() + ", 2)",
+            :class => 'two-stars', :name => '2 stars out of 5') %>
+    </li>
+    <li>
+        <%= link_to("3", "#", :onclick => "javascript:rateRadio(" + asset.id.to_s() + ", 3)",
+            :class => 'three-stars', :name => '3 stars out of 5') %>
+    </li>
+    <li>
+        <%= link_to("4", "#", :onclick => "javascript:rateRadio(" + asset.id.to_s() + ", 4)",
+            :class => 'four-stars', :name => '4 stars out of 5') %>
+    </li>
+    <li>
+        <%= link_to("5", "#", :onclick => "javascript:rateRadio(" + asset.id.to_s() + ", 5)",
+            :class => 'five-stars', :name => '5 stars out of 5') %>
+    </li>
+</ul>
+
+<script>
+
+  function rateRadio(radio_id, rating) {
+
+     $.ajax({
+      type: "POST",
+      url: '/ratings/rate',
+      data: {id: radio_id, rating: rating},
+      dataType: 'json',
+      success: function(average_rating) {
+        $("#average-rating").text(average_rating);
+      }
+    });
+
+  }
+
+</script>
