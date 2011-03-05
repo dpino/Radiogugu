@@ -1,7 +1,4 @@
-<p>All comments (1180)<p>
-
-
-<!-- Show all comments -->
+<p>All comments (<span id="all-comments-counter"><%= @radio.comments.length %></span>)<p>
 
 <form>
   <div class="comment-to-add">
@@ -13,11 +10,17 @@
   </div>
 </form>
 
+
+<!-- Show all comments -->
 <div id="new-comments">
 </div>
 
+<!--
 <div id="saved-comments">
 </div>
+-->
+<!-- Saved comments -->
+<%= render :partial => @radio.comments %>
 
 <script>
 
@@ -40,17 +43,26 @@ function addComment() {
       success: function(msg) {
         var new_comment = $(htmlForComment(comment));
 
+        // Update comment
         $('#new-comments').prepend(new_comment);
         $(new_comment).animate({backgroundColor:"yellow"},  100);
         $(new_comment).animate({backgroundColor:"white"},  1000);
+
+        // Update total number of comments
+        var all_comments_counter = $('#all-comments-counter').text();
+        all_comments_counter = parseInt(all_comments_counter, 10) + 1;
+        $('#all-comments-counter').text(all_comments_counter);
       }
     });
 }
 
-var COMMENT_HTML = "<div class='comment'> \
-	<div class='body'>###BODY###</div> \
-	<span class='author'>by <a href='###AUTHOR_LINK###'>###AUTHOR###</a></span> \
-</div>";
+var COMMENT_HTML =
+  "<div class='comment'> \
+    <div class='body'>###BODY###</div> \
+    <span class='author'>by <a href='###AUTHOR_LINK###'>###AUTHOR###</a> \
+      <span class='time'> 1 month ago</span> \
+    </span> \
+  </div>";
 
 function htmlForComment(comment) {
   var body = htmlEncode(comment.body);
