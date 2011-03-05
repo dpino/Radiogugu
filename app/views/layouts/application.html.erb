@@ -34,6 +34,14 @@
         <!-- Header -->
         <div>
             <%= image_tag("radio_gugu_logo_mini3.png") %>
+            <% if user_signed_in? %>
+              <span style="float: right; padding-right: 20px; color: white">
+                <span><%= current_user.username %>, </span>
+                <%= link_to "Sign out", destroy_user_session_path %>
+              </span>
+            <% else %>
+              <%= link_to image_tag("sign_up.png", :width => "120px", :style => "float: right; padding-right: 10px" ), new_user_registration_path %>
+            <% end %>
         </div>
   </div>
 
