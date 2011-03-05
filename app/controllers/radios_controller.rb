@@ -3,6 +3,7 @@ class RadiosController < ApplicationController
   # GET /radios.xml
   def index
     @radios = Radio.all
+    @active_tab = :gender
 
     respond_to do |format|
       format.html # index.html.erb
@@ -14,6 +15,7 @@ class RadiosController < ApplicationController
   # GET /radios/1.xml
   def show
     @radio = Radio.find(params[:id])
+    @active_tab = :gender
 
     respond_to do |format|
       format.html # show.html.erb

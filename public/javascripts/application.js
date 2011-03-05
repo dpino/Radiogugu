@@ -2,6 +2,7 @@
 // This file is automatically included by javascript_include_tag :defaults
 
 $(document).ready(function() {
+
   $('#radio-station-data-edit').click(function() {
     var node = $(this);
     var option = node.text();

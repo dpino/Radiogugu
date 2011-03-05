@@ -45,15 +45,34 @@
         </div>
   </div>
 
+
   <div class="menubar">
-        <span><%= link_to "Home", url_for(:controller => '/home') %></span> |
-        <span><%= link_to "Countries", countries_path %></span> |
-        <span><%= link_to "Gender", radios_path %></span> |
-        <form>
-          <input type="text" value="Search this site" />
-          <input type="submit" value="Go!" />
-        </form>
-    &nbsp;
+    <ul class="tabs">
+      <%
+        tabs = Hash.new
+        tabs[:home] = url_for(:controller => '/home')
+        tabs[:countries] = countries_path
+        tabs[:gender] = radios_path
+
+        [:home, :countries, :gender].each do |key|
+          if session[:active_tab] == nil || key == session[:active_tab] %>
+            <li class="active">
+          <% else %>
+            <li>
+          <% end %>
+          <%= link_to key, tabs[key] %></li>
+        <% end %>
+      <!--
+      <li><%= link_to "Home", url_for(:controller => '/home') %></li>
+      <li><%= link_to "Countries", countries_path %></li>
+      <li><%= link_to "Gender", radios_path %></li>
+      -->
+    </ul>
+
+    <form>
+      <input type="text" value="Search this site" />
+      <input type="submit" value="Go!" />
+    </form>
   </div>
 
     <div id="bd">
@@ -82,7 +101,7 @@
         <p>Copyright RadioGugu @ 2011</p>
       </div>
     </div>
-    
+
 </div>
 
 </body>

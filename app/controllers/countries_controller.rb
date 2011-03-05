@@ -6,6 +6,7 @@ class CountriesController < ApplicationController
     @country = params[:id]
     @sort_order = get_order(params[:order])
     session[:sort_order] = @sort_order
+    session[:active_tab] = :countries
 
     if @country != nil && @country.size() > 0
       stations_in_country(@country)
@@ -120,6 +121,7 @@ class CountriesController < ApplicationController
   # GET /locations/countries.xml
   def show
     @country = Location.where("country = ?", country)
+    session[:active_tab] = :countries
 
     respond_to do |format|
         format.html # show.html.erb

@@ -3,24 +3,9 @@ body {
   color: black;
 }
 
-div.menubar {
-  background: black;
-  width: 100%;
-  padding: 8px 5px;
-  font: Arial 12px ;
-  margin-right: 5px;
-}
-
-div.menubar a {
-  color: white;
-  font-weight: bold;
-  text-decoration: none;
-}
-
 div.menubar form {
   float: right;
-  margin-top: -3px;
-  margin-right: 15px;
+  margin-top: -44px;
 }
 
 div.yui-b {
@@ -44,4 +29,50 @@ div.yui-b {
 #contact-list span {
   display: block;
   margin-left: 15px;
+}
+
+ul.tabs {
+  background: #e0e0e0;
+  margin: 0;
+  padding: 0px 0px;
+  float: left;
+  list-style: none;
+  height: 32px; /*--Set height of tabs--*/
+  border-bottom: 1px solid #999;
+  border-left: 1px solid #999;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+ul.tabs li {
+  float: left;
+  margin: 0;
+  padding: 0;
+  height: 31px; /*--Subtract 1px from the height of the unordered list--*/
+  line-height: 31px; /*--Vertically aligns the text within the tab--*/
+  border: 1px solid #999;
+  border-left: none;
+  margin-bottom: -1px; /*--Pull the list item down 1px--*/
+  overflow: hidden;
+  position: relative;
+  background: #e0e0e0;
+}
+
+ul.tabs li a {
+  text-decoration: none;
+  color: #000;
+  display: block;
+  font-size: 1.2em;
+  padding: 0 20px;
+  border: 1px solid #fff; /*--Gives the bevel look with a 1px white border inside the list item--*/
+  outline: none;
+}
+
+ul.tabs li a:hover {
+  background: #ccc;
+}
+
+html ul.tabs li.active, html ul.tabs li.active a:hover  { /*--Makes sure that the active tab does not listen to the hover properties--*/
+  background: #fff;
+  border-bottom: 1px solid #fff; /*--Makes the active tab look like it's connected with its content--*/
 }
