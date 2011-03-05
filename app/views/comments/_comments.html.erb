@@ -47,10 +47,22 @@ function addComment() {
     });
 }
 
+var COMMENT_HTML = "<div class='comment'> \
+	<div class='body'>###BODY###</div> \
+	<span class='author'>by <a href='###AUTHOR_LINK###'>###AUTHOR###</a></span> \
+</div>";
+
 function htmlForComment(comment) {
   var body = htmlEncode(comment.body);
   var body = body.replace(/\n\r?/g, '<br/>');
-  return "<div>###BODY###</div>".replace("###BODY###", body);
+  var author = "Diego Pino";
+  var author_link = "pinowsky@gmail.com";
+
+  var result = COMMENT_HTML;
+  result = result.replace("###BODY###", body);
+  result = result.replace("###AUTHOR###", author);
+  result = result.replace("###AUTHOR_LINK###", author_link);
+  return result;
 }
 
 </script>

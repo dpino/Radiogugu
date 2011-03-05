@@ -94,3 +94,12 @@ div.comment-to-add div.control-buttons {
   width: 400px;
   text-align: right;
 }
+
+div.comment .body {
+  text-align: left;
+}
+
+div.comment .author {
+  text-align: left;
+  font-size: 10px;
+}
