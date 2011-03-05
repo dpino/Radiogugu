@@ -1,12 +1,10 @@
 <%
-  today = Time.now
-  day = DateTime.parse(comment.updated_at.to_s)
-  time_distance = distance_of_time_in_words(day, today)
+  updated_at = DateTime.parse(comment.updated_at.to_s)
 %>
 <div class='comment'>
   <div class='body'><%= comment.body %></div>
   <span class='author'>
-    by <a href='mailto:pinowsky@gmail.com'>Diego Pino</a>
-    <span class='time'><%= time_distance %> ago</span>
+    by <a href='mailto:<%= comment.user.email %>'><%= comment.user.username %></a>
+    <span class='time'><%= distance_of_time_until_today(updated_at) %></span>
   </span>
 </div>

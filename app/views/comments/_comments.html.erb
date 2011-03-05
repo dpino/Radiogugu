@@ -32,9 +32,8 @@ function cancelComment() {
 }
 
 function addComment() {
-  var body = $('#comment-to-add').val();
+  var comment = $('#comment-to-add').val();
   var radio_id = $('#radio-station-data-edit').attr('name');
-  var comment = {'body': body};
 
   $('#comment-to-add').val('');
 
@@ -43,8 +42,8 @@ function addComment() {
       url: '/radios/###radio_id###/comments/'.replace('###radio_id###', radio_id),
       data: {comment: comment},
       dataType: 'json',
-      success: function(msg) {
-        var new_comment = $(htmlForComment(comment));
+      success: function(commentObj) {
+        var new_comment = $(htmlForComment(commentObj));
 
         // Update comment
         $('#new-comments').prepend(new_comment);
@@ -62,21 +61,20 @@ function addComment() {
 var COMMENT_HTML =
   "<div class='comment'> \
     <div class='body'>###BODY###</div> \
-    <span class='author'>by <a href='###AUTHOR_LINK###'>###AUTHOR###</a> \
-      <span class='time'> 1 month ago</span> \
+    <span class='author'>by <a href='mailto:###AUTHOR_EMAIL###'>###AUTHOR###</a> \
+      <span class='time'>###TIME_DISTANCE###</span> \
     </span> \
   </div>";
 
-function htmlForComment(comment) {
-  var body = htmlEncode(comment.body);
+function htmlForComment(commentObj) {
+  var body = htmlEncode(commentObj.body);
   var body = body.replace(/\n\r?/g, '<br/>');
-  var author = "Diego Pino";
-  var author_link = "pinowsky@gmail.com";
 
   var result = COMMENT_HTML;
   result = result.replace("###BODY###", body);
-  result = result.replace("###AUTHOR###", author);
-  result = result.replace("###AUTHOR_LINK###", author_link);
+  result = result.replace("###AUTHOR###", commentObj.username);
+  result = result.replace("###AUTHOR_EMAIL###", commentObj.useremail);
+  result = result.replace("###TIME_DISTANCE###", commentObj.time_distance);
   return result;
 }
 
