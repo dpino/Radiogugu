@@ -83,3 +83,14 @@ div.comment div {
   margin-top: 5px;
   text-align: right;
 }
+
+div.comment-to-add textarea {
+  width: 400px;
+  height: 75px;
+  border: 1px solid black;
+}
+
+div.comment-to-add div.control-buttons {
+  width: 400px;
+  text-align: right;
+}

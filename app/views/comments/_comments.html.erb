@@ -4,10 +4,12 @@
 <!-- Show all comments -->
 
 <form>
-  <textarea id="comment-to-add" class="comment"></textarea>
-  <div>
-    <a href="javascript:cancelComment()">Cancel</a><span> or </span>
-    <input type="button" value="Accept" onClick="javascript:addComment()" />
+  <div class="comment-to-add">
+    <textarea id="comment-to-add" class="comment"></textarea>
+    <div class="control-buttons">
+      <a href="javascript:cancelComment()">Cancel</a><span> or </span>
+      <input type="button" value="Accept" onClick="javascript:addComment()" />
+    </div>
   </div>
 </form>
 
