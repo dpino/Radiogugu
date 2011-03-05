@@ -10,6 +10,8 @@
 <!-- Show menu -->
 <%= render 'stations_nav_menu' %>
 
+<% @show_location = session[:sort_order] != :location %>
+
 <br/>
 <% @stations.map do |key, stations| %>
   <a name="<%= key %>"></a>
@@ -20,9 +22,16 @@
   </div>
   <ul class="stations-list">
     <%
+      puts "show_location mierda: #{@show_location}"
       stations.sort! { |a,b| a.name.downcase <=> b.name.downcase }
       stations.each do |station| %>
-        <li><%= link_to station.name, station %></li>
+        <li style="display: table-row">
+          <span style="display: table-cell; width: 300px"><%= link_to station.name, station %></span>
+          <span style="display: table-cell; width: 200px"><%= station.gender %></span>
+          <% if @show_location %>
+            <span style="display: table-cell; width: 200px"><%= station.location.location %></span>
+          <% end %>
+        </li>
       <% end %>
   </ul>
 <% end %>
