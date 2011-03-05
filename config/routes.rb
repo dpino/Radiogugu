@@ -1,5 +1,7 @@
 Radiogugu::Application.routes.draw do
 
+  devise_for :users
+
   get "ratings/rate"
 
   resources :locations
