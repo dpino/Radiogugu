@@ -3,7 +3,8 @@ class CommentsController < ApplicationController
   # GET /Comments
   # GET /Comments.xml
   def index
-    @Comments = Comment.find(:all)
+    puts "index comments"
+    @Comments = Comment.find(:all, :order => "updated_at desc")
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @Comments }
@@ -13,7 +14,8 @@ class CommentsController < ApplicationController
   # GET /Comments/1
   # GET /Comments/1.xml
   def show
-    @Comment = Comment.find(params[:id])
+    puts "show comments"
+    @Comment = Comment.find(params[:id], :order => "updated_at desc")
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @Comment }
