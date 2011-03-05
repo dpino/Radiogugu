@@ -24,8 +24,7 @@ class CommentsController < ApplicationController
   # POST /comments.xml
   def create
     @radio = Radio.find(params[:radio_id])
-    @comment = @radio.comments.create(params[:comment])
-    @comment.user_id = current_user.id
+    @comment = @radio.comments.create({:body => params[:comment], :user_id => current_user.id});
     respond_to do |format|
       format.json { render :json => @comment, :status => :ok }
     end
