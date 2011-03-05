@@ -1,13 +1,19 @@
 <!-- Sort options -->
 <%= render 'search_options' %>
 
+<!-- Country name -->
 <h1><%= @country %></h1>
+
+<!-- Breadcrumb -->
+<b><%= country_breadcrumb(@country) %></b>
+
 <!-- Show menu -->
 <%= render 'stations_nav_menu' %>
 
 <br/>
 <% @stations.map do |key, stations| %>
   <a name="<%= key %>"></a>
+
   <div class="margin-top:16px">
     <span style="font-size: 16px; color: red"><%= key %> </span>
     <a style="font-size: 10px" href="#stations-nav-menu">[return]</a>

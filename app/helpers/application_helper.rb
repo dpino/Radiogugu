@@ -13,6 +13,20 @@ module ApplicationHelper
     return continent_url + DOUBLE_ARROW + country_url + DOUBLE_ARROW + location_url + DOUBLE_ARROW + station.name
   end
 
+  def country_breadcrumb(country_name)
+    locations = Location.where(:country => country_name).limit(1)
+    if locations.empty?
+      return "";
+    end
+    location = locations[0];
+    order = session[:sort_order]
+
+    continent_url = continent_url(location[:continent])
+    country_url = country_url(location[:country], order)
+
+    return continent_url + DOUBLE_ARROW + country_url
+  end
+
   def continent_url(continent)
     return link_to continent, url_for(:controller => "countries", :order => "continent") + "##{continent}"
   end
