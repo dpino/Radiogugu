@@ -1,15 +1,18 @@
 <p>All comments (<span id="all-comments-counter"><%= @radio.comments.length %></span>)<p>
 
-<form>
-  <div class="comment-to-add">
-    <textarea id="comment-to-add" class="comment"></textarea>
-    <div class="control-buttons">
-      <a href="javascript:cancelComment()">Cancel</a><span> or </span>
-      <input type="button" value="Accept" onClick="javascript:addComment()" />
+<% if user_signed_in? %>
+  <form>
+    <div class="comment-to-add">
+      <textarea id="comment-to-add" class="comment"></textarea>
+      <div class="control-buttons">
+        <a href="javascript:cancelComment()">Cancel</a><span> or </span>
+        <input type="button" value="Accept" onClick="javascript:addComment()" />
+      </div>
     </div>
-  </div>
-</form>
-
+  </form>
+<% else %>
+  <p>Not logged in? <%= link_to 'Log in', new_user_session_path %> or <%= link_to 'Sign up', new_user_registration_path %> to post comments.</p>
+<% end %>
 
 <!-- Show all comments -->
 <div id="new-comments">
