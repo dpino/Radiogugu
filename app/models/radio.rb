@@ -5,4 +5,5 @@ class Radio < ActiveRecord::Base
 
   belongs_to :location
   has_many :comments, :order => "updated_at desc"
+  has_and_belongs_to_many :genders
 end

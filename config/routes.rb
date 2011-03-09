@@ -1,5 +1,7 @@
 Radiogugu::Application.routes.draw do
 
+  resources :genders
+
   devise_for :users
 
   post "ratings/rate"

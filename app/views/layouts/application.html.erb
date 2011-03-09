@@ -52,7 +52,7 @@
         tabs = Hash.new
         tabs[:home] = url_for(:controller => '/home')
         tabs[:countries] = countries_path
-        tabs[:gender] = radios_path
+        tabs[:gender] = genders_path
 
         [:home, :countries, :gender].each do |key|
           if session[:active_tab] == nil || key == session[:active_tab] %>
@@ -62,11 +62,6 @@
           <% end %>
           <%= link_to key, tabs[key] %></li>
         <% end %>
-      <!--
-      <li><%= link_to "Home", url_for(:controller => '/home') %></li>
-      <li><%= link_to "Countries", countries_path %></li>
-      <li><%= link_to "Gender", radios_path %></li>
-      -->
     </ul>
 
     <form>

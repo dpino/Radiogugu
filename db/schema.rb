@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110305203253) do
+ActiveRecord::Schema.define(:version => 20110309144220) do
 
   create_table "comments", :force => true do |t|
     t.text     "body"
@@ -18,6 +18,12 @@ ActiveRecord::Schema.define(:version => 20110305203253) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
+  end
+
+  create_table "genders", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "locations", :force => true do |t|
@@ -32,10 +38,15 @@ ActiveRecord::Schema.define(:version => 20110305203253) do
     t.string   "name"
     t.string   "website"
     t.string   "gender"
-    t.datetime "created_at"
-    t.datetime "updated_at"
     t.string   "url",         :limit => 1024
     t.integer  "location_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "radios_genders", :id => false, :force => true do |t|
+    t.integer "radio_id"
+    t.integer "gender_id"
   end
 
   create_table "ratings", :force => true do |t|

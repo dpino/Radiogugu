@@ -6,5 +6,5 @@ development:
   database: radiogugu_rails
   pool: 5
   username: root
-  password:
+  password: nexus7
   socket: /var/run/mysqld/mysqld.sock
