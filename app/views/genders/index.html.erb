@@ -1,7 +1,10 @@
 <h1>Genders</h1>
+<p style="margin-top: -10px; color: green; font-style: italic"><%= @genders.size %> genders</p>
 
 <% @genders.each do |gender| %>
   <span><%= link_to gender.name, url_for(:controller => 'genders', :action => 'show', :id => gender.id) %></a></span> |
 <% end %>
 
-<br />
+<!-- Empty space -->
+<div style="height: 200px">
+</div>

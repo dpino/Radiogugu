@@ -4,6 +4,7 @@ class GendersController < ApplicationController
   # GET /genders.xml
   def index
     @genders = Gender.all
+    session[:active_tab] = :genders
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @genders }
@@ -16,7 +17,12 @@ class GendersController < ApplicationController
   def show
     gender_id = params[:id]
     @gender = Gender.find(gender_id)
-    @radios_by_country = to_radios_by_country(@gender.radios)
+
+    radios = @gender.radios
+    @radios_by_country = to_radios_by_country(radios)
+    @total_radios = radios.size
+    @total_countries = @radios_by_country.size
+
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @genders }

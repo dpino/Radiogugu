@@ -52,9 +52,9 @@
         tabs = Hash.new
         tabs[:home] = url_for(:controller => '/home')
         tabs[:countries] = countries_path
-        tabs[:gender] = genders_path
+        tabs[:genders] = genders_path
 
-        [:home, :countries, :gender].each do |key|
+        [:home, :countries, :genders].each do |key|
           if session[:active_tab] == nil || key == session[:active_tab] %>
             <li class="active">
           <% else %>

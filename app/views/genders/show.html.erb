@@ -1,4 +1,9 @@
 <h1><%= @gender.name %></h1>
+<%
+  total_radios_label = @total_radios.to_s + ((@total_radios == 1) ? " radio station" : " radio stations")
+  total_countries_label = @total_countries.to_s + ((@total_countries == 1) ? " country" : " countries");
+%>
+<p style="margin-top: -10px; color: green; font-style: italic"><%= total_radios_label %> in <%= total_countries_label %></p>
 
 <!-- Show menu -->
 <%= render 'stations_nav_menu' %>
