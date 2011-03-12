@@ -1,7 +1,7 @@
 <h1>Genders</h1>
 
 <% @genders.each do |gender| %>
-  <span><a href="#"><%= gender.name %></a></span> |
+  <span><%= link_to gender.name, url_for(:controller => 'genders', :action => 'show', :id => gender.id) %></a></span> |
 <% end %>
 
 <br />

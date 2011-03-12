@@ -1,0 +1,8 @@
+<a name="stations-nav-menu"></a>
+<b>Countries:</b>
+<div class="stations-nav-menu">
+  <% @radios_by_country.map do |country, radios| %>
+    <span><a href='#<%= country %>'><%= country %></a></span> |
+  <% end %>
+</div>
+<br/>

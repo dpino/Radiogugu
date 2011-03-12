@@ -20,9 +20,9 @@
     <span style="font-size: 16px; color: red"><%= key %> </span>
     <a style="font-size: 10px" href="#stations-nav-menu">[return]</a>
   </div>
+
   <ul class="stations-list">
     <%
-      puts "show_location mierda: #{@show_location}"
       stations.sort! { |a,b| a.name.downcase <=> b.name.downcase }
       stations.each do |station| %>
         <li style="display: table-row">

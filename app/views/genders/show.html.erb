@@ -1,0 +1,29 @@
+<h1><%= @gender.name %></h1>
+
+<!-- Show menu -->
+<%= render 'stations_nav_menu' %>
+
+<% @radios_by_country.map do |country, radios| %>
+  <a name="<%= country %>"></a>
+
+  <div class="margin-top:16px">
+    <span style="font-size: 16px; color: red"><%= country %> </span>
+    <a style="font-size: 10px" href="#stations-nav-menu">[return]</a>
+  </div>
+
+  <% radios.sort! { |a,b| a.name.downcase <=> b.name.downcase }
+     radios.each do |radio| %>
+    <ul class="stations-list">
+      <li style="display: table-row">
+        <span style="display: table-cell; width: 300px">
+          <%= link_to radio.name, url_for(:controller => 'radios', :action => 'show', :id => radio.id) %>
+        </span>
+        <span style="display: table-cell; width: 200px">
+          <%= radio.location_str %>
+        </span>
+      </li>
+    </ul>
+  <% end %>
+<% end %>
+
+<br />

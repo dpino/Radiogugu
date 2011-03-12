@@ -14,7 +14,27 @@ class GendersController < ApplicationController
   # GET /genders/:id
   # GET /genders/:id.xml
   def show
+    gender_id = params[:id]
+    @gender = Gender.find(gender_id)
+    @radios_by_country = to_radios_by_country(@gender.radios)
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml => @genders }
+    end
+  end
 
+  def to_radios_by_country(radios)
+    result = Hash.new
+    radios.each { |radio|
+      location = Location.find(radio.location_id)
+      country = location.country
+      if (result[country] == nil)
+        result[country] = Array.new
+      end
+      radio.location_str = location.location
+      result[country] << radio
+    }
+    return result.sort
   end
 
   # POST /genders
