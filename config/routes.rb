@@ -1,10 +1,14 @@
 Radiogugu::Application.routes.draw do
 
-  resources :genders
+  post "ratings/rate"
+
+  resources :favorites
+
+  get "favorites/add/:id", :controller => "favorites", :action => "add"
 
   devise_for :users
 
-  post "ratings/rate"
+  resources :genders
 
   resources :locations
 

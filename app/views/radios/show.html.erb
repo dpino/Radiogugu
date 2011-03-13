@@ -1,4 +1,9 @@
-<h2><%= @radio.name %></h2>
+<div style="margin-bottom: 10px">
+  <h2 style="display: inline"><%= @radio.name %></h2>
+  <% if (current_user != nil) %>
+    <span id="add-to-favorites" name="<%= @radio.id %>">[Add to favorites]</span>
+  <% end %>
+</div>
 
 <!-- Show breadcrum Continent >> Country >> Location -->
 <b><%= location_breadcrumb(@radio) %></b>
@@ -9,7 +14,11 @@
       <tr>
         <td><b>Website</b>:</td>
         <td><span id="website-url"><a href="<%= @radio.website %>"><%= @radio.website %></a></span></td>
-        <td><span id="radio-station-data-edit" name="<%= @radio.id %>">[Edit]</span></td>
+        <% if (current_user != nil) %>
+          <td><span style="color: #53a3f6" id="radio-station-data-edit" name="<%= @radio.id %>">[Edit]</span></td>
+        <% else %>
+          <td>&nbsp;</td>
+        <% end %>
       </tr>
       <tr>
         <td><b>Tags</b>:</td>

@@ -3,6 +3,10 @@
 
 $(document).ready(function() {
 
+  $('#add-to-favorites').click(function() {
+    addRadioToFavorites($(this));
+  });
+
   $('#radio-station-data-edit').click(function() {
     var node = $(this);
     var option = node.text();
@@ -16,6 +20,42 @@ $(document).ready(function() {
     }
 
   });
+
+  function addRadioToFavorites(node) {
+    var radio_id = node.attr('name');
+
+    $.ajax({
+      type: "GET",
+      url: '/favorites/add/' + radio_id,
+      dataType: 'json',
+      success: function(result) {
+        // Save previous style
+        var original_text = node.text();
+        var original_css = {
+          'color': node.css('color'),
+          'font_style': node.css('font-style')
+        }
+
+        // Prepare styles and show resulting message
+        var color = "green";
+        var font_style = "italic";
+        if (result.status == "ERROR") {
+          color = "red";
+        }
+        node.css('color', color)
+          .css('font-style', font_style)
+          .text(result.msg);
+
+        // Reset to original text
+        setTimeout(function() {
+          node.css('color', original_css.color)
+            .css('font-style', original_css.font_style)
+            .text(original_text);
+        }, 2000);
+      }
+    });
+  }
+
 
   function saveRadioStation(id, radio) {
     $.ajax({
