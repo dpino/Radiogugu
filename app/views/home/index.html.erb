@@ -1,3 +1,18 @@
+<% if (current_user != nil) %>
+<h2>Your favorites</h2>
+<ul>
+  <% @favorites = Favorite.where("user_id = #{current_user.id}") %>
+  <% @favorites.each do |favorite| %>
+    <li>
+    <%=
+      radio = favorite.radio
+      link_to radio.name, url_for(:controller => 'radios', :action => 'show', :id => radio.id)
+    %>
+    </li>
+  <% end %>
+</ul>
+<% end %>
+
 <h2>Most popular this week</p>
   <ul>
   <% @popular_stations.each do |station| %>

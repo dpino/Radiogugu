@@ -5,6 +5,9 @@ class Radio < ActiveRecord::Base
 
   belongs_to :location
   has_many :comments, :order => "updated_at desc"
+  belongs_to :favorite
+  # has_one :favorite
+  # has_many :favorites
   has_and_belongs_to_many :genders
 
   # Fake properties (only used in Views)
