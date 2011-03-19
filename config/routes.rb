@@ -2,9 +2,10 @@ Radiogugu::Application.routes.draw do
 
   post "ratings/rate"
 
+  # Favorites
   resources :favorites
-
   get "favorites/add/:id", :controller => "favorites", :action => "add"
+  get "favorites/remove/:id", :controller => "favorites", :action => "remove"
 
   devise_for :users
 

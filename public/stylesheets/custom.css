@@ -104,7 +104,7 @@ div.comment .author {
   font-size: 10px;
 }
 
-#add-to-favorites {
+span.clickable-option, #add-to-favorites, #remove-from-favorites {
   font-size: 10px;
   color: #53a3f6;
   text-decoration: none;

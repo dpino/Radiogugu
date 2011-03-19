@@ -1,29 +1,57 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
 
+
+// Adds replace function to jQuery
+// Substitutes node with a new node
+$.fn.replace = function(o) { return this.after(o).remove(); };
+
 $(document).ready(function() {
 
-  $('#add-to-favorites').click(function() {
-    addRadioToFavorites($(this));
-  });
+  $('#add-to-favorites').click(addRadio);
 
-  $('#radio-station-data-edit').click(function() {
+  function addRadio() {
     var node = $(this);
-    var option = node.text();
+    var radio = JSON.parse($(this).attr('name'));
+    addRadioToFavorites(node, radio.id);
+  }
 
-    if (option == '[Edit]') {
-      editRadioStation(node);
-    } else {
-      var toBeSaved = getRadioStationObject(node);
-      var id = node.attr('name');
-      saveRadioStation(id, toBeSaved);
-    }
+  $('#remove-from-favorites').click(removeRadio);
 
-  });
+  function removeRadio() {
+    var node = $(this);
+    var radio = JSON.parse($(this).attr('name'));
+    removeRadioFromFavorites(node, radio.id);
+  }
 
-  function addRadioToFavorites(node) {
-    var radio_id = node.attr('name');
+  function removeRadioFromFavorites(node, radio_id) {
+    $.ajax({
+      type: "GET",
+      url: '/favorites/remove/' + radio_id,
+      dataType: 'json',
+      success: function(result) {
+        var color = "green";
+        var font_style = "italic";
 
+        node.css('color', color)
+          .css('font-style', font_style)
+          .text("Radio removed from favorites");
+
+        // Reset to original text
+        setTimeout(function() {
+          node.replace(createAddRadioToFavoritesNode(radio_id));
+        }, 2000);
+      }
+    });
+  }
+
+  function createAddRadioToFavoritesNode(radio_id) {
+    var result = $("<span id='add-to-favorites' name='{\"id\" : " + radio_id + "}'>[Add to favorites]</span>");
+    result.click(addRadio);
+    return result;
+  }
+
+  function addRadioToFavorites(node, radio_id) {
     $.ajax({
       type: "GET",
       url: '/favorites/add/' + radio_id,
@@ -44,18 +72,35 @@ $(document).ready(function() {
         }
         node.css('color', color)
           .css('font-style', font_style)
-          .text(result.msg);
+          .text(result.notificationMsg);
 
-        // Reset to original text
+        // Set remove from radios
         setTimeout(function() {
-          node.css('color', original_css.color)
-            .css('font-style', original_css.font_style)
-            .text(original_text);
+          node.replace(createRemoveFromFavoritesNode(radio_id));
         }, 2000);
       }
     });
   }
 
+  function createRemoveFromFavoritesNode(radio_id) {
+    var result = $("<span id='remove-from-favorites' name='{\"id\" : " + radio_id + "}'>[Remove from favorites]</span>");
+    result.click(removeRadio);
+    return result;
+  }
+
+  $('#radio-station-data-edit').click(function() {
+    var node = $(this);
+    var option = node.text();
+
+    if (option == '[Edit]') {
+      editRadioStation(node);
+    } else {
+      var toBeSaved = getRadioStationObject(node);
+      var id = node.attr('name');
+      saveRadioStation(id, toBeSaved);
+    }
+
+  });
 
   function saveRadioStation(id, radio) {
     $.ajax({

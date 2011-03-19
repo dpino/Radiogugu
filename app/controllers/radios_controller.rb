@@ -15,12 +15,20 @@ class RadiosController < ApplicationController
   # GET /radios/1.xml
   def show
     @radio = Radio.find(params[:id])
+    @is_favorite = is_favorite(@radio.id)
     @active_tab = :gender
 
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @radio }
     end
+  end
+
+  def is_favorite(radio_id)
+    if (current_user != nil)
+      return Favorite.exists?(["user_id = ? AND radio_id = ?", current_user.id, radio_id])
+    end
+    return false
   end
 
   # GET /radios/new

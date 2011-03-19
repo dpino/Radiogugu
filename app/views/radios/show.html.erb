@@ -1,7 +1,11 @@
 <div style="margin-bottom: 10px">
   <h2 style="display: inline"><%= @radio.name %></h2>
   <% if (current_user != nil) %>
-    <span id="add-to-favorites" name="<%= @radio.id %>">[Add to favorites]</span>
+    <% if (@is_favorite) %>
+      <span id="remove-from-favorites" name='{"id" : <%= @radio.id %> }'>[Remove from favorites]</span>
+    <% else %>
+      <span id="add-to-favorites" name='{"id" : <%= @radio.id %> }'>[Add to favorites]</span>
+    <% end %>
   <% end %>
 </div>
 

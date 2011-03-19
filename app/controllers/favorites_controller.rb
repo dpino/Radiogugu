@@ -17,6 +17,20 @@ class FavoritesController < ApplicationController
     puts "new to favorites" + params[:id]
   end
 
+  # GET /favorites/remove/:id
+  # GET /favorites/remove/:id.json
+  def remove
+    return if current_user == nil
+
+    # Remove favorite
+    radio_id = params[:id]
+    Favorite.delete_all(["radio_id = ? AND user_id = ?", radio_id, current_user.id])
+
+    respond_to do |format|
+      format.json { render :json => {:msg => "Removed from your list", :status => :OK }}
+    end
+  end
+
   # GET /favorites/add/:id
   # GET /favorites/add/:id.json
   def add
@@ -31,11 +45,10 @@ class FavoritesController < ApplicationController
     if radios != nil && radios.size == 0
       @favorite = Favorite.new(:radio_id => radio_id, :user_id => current_user_id)
       @favorite.save
-      result = {:msg => "Added to your list", :status => :OK }
+      result = {:notificationMsg => "Added to your list", :newMsg => "[Remove from your favorites]", :status => :OK }
     else
-      result = {:msg => "Already in your list", :status => :ERROR }
+      result = {:notificationMsg => "Already in your list", :newMsg => "[Add to favorites]", :status => :ERROR }
     end
-
 
     respond_to do |format|
       format.json { render :json => result }
