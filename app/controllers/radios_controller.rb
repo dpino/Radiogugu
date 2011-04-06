@@ -2,13 +2,23 @@ class RadiosController < ApplicationController
   # GET /radios
   # GET /radios.xml
   def index
-    @radios = Radio.all
+    @radios = all_radios()
     @active_tab = :gender
 
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @radios }
     end
+  end
+
+  def all_radios()
+    return current_user == nil ? Radio.all : all_radios_for_user()
+  end
+
+  def all_radios_for_user(radios)
+    user_radios = Radio.where("user_id = ?", current_user.id)
+    original_radios = Radio.where("user_id = null AND id NOT IN (?)", user_radios)
+    return original_radios + user_radios
   end
 
   # GET /radios/1
@@ -68,6 +78,14 @@ class RadiosController < ApplicationController
   def update
     @radio = Radio.find(params[:id])
 
+    # User not logged, cannot modify radio
+    return if (current_user == nil)
+
+    # User logged, but modifying original radio
+    if (@radio.user == nil)
+      @radio = save_as_user_copy(@radio)
+    end
+
     respond_to do |format|
       if @radio.update_attributes(params[:radio])
         format.html { redirect_to(@radio, :notice => 'Radio was successfully updated.') }
@@ -79,6 +97,14 @@ class RadiosController < ApplicationController
         format.json { render :json => @radio, :status => :ok }
       end
     end
+  end
+
+  def save_as_user_copy(radio)
+    newRadio = radio.clone
+    newRadio.user = current_user
+    newRadio.parent = radio
+    newRadio.save
+    return newRadio
   end
 
   # DELETE /radios/1

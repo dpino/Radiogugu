@@ -95,7 +95,7 @@ class CountriesController < ApplicationController
   def to_stations_in_alphabetic_order(locations)
     result = Hash.new
     locations.each {|location|
-      stations = Radio.where("location_id = ?", location[:id])
+      stations = radios_in_location(location[:id])
       stations.each {|station|
         letter = station.name[0,1]
         if (result[letter] == nil)
@@ -110,11 +110,29 @@ class CountriesController < ApplicationController
   def to_stations_by_location(locations)
     result = Hash.new
     locations.each {|location|
-      stations = Radio.where("location_id = ?", location[:id])
+      stations = radios_in_location(location[:id])
       city = location[:location]
       result[city] = stations
     }
     return result.sort
+  end
+
+  def radios_in_location(location_id)
+    all_radios = Radio.where("user_id is null AND location_id = ?", location_id)
+    return all_radios if current_user == nil
+    modified_by_user = Radio.where("user_id = ? AND location_id = ?", current_user.id, location_id)
+    return all_radios if (modified_by_user.empty?)
+    parent_ids = parent_ids(modified_by_user)
+    other_radios = Radio.where("user_id is null AND location_id = ? AND id NOT IN (?)", location_id, parent_ids(modified_by_user))
+    return other_radios + modified_by_user
+  end
+
+  def parent_ids(radios)
+    result = Array.new
+    radios.each { |radio|
+      result << radio.parent_id
+    }
+    return result
   end
 
   # GET /locations/countries
