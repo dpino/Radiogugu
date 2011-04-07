@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110402074344) do
+ActiveRecord::Schema.define(:version => 20110407215208) do
 
   create_table "comments", :force => true do |t|
     t.text     "body"
@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(:version => 20110402074344) do
   create_table "genders_radios", :id => false, :force => true do |t|
     t.integer "gender_id"
     t.integer "radio_id"
+    t.integer "user_id"
   end
 
   create_table "locations", :force => true do |t|

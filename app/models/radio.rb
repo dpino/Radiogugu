@@ -9,7 +9,9 @@ class Radio < ActiveRecord::Base
   belongs_to :parent, :class_name => 'Radio'
 
   has_many :comments, :order => "updated_at desc"
-  has_and_belongs_to_many :genders
+
+  has_many :genders_radios
+  has_many :genders, :through => :genders_radios
 
   # Fake properties (only used in Views)
   attr_accessor :location_str

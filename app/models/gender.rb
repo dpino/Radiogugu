@@ -1,3 +1,4 @@
 class Gender < ActiveRecord::Base
-   has_and_belongs_to_many :radios
+  has_many :genders_radios
+  has_many :radios, :through => :genders_radios
 end

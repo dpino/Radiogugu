@@ -85,6 +85,7 @@ class RadiosController < ApplicationController
     if (@radio.user == nil)
       @radio = save_as_user_copy(@radio)
     end
+    puts "Genders: " + @radio.genders
 
     respond_to do |format|
       if @radio.update_attributes(params[:radio])
@@ -104,6 +105,7 @@ class RadiosController < ApplicationController
     newRadio.user = current_user
     newRadio.parent = radio
     newRadio.save
+    # save_tags(newRadio)
     return newRadio
   end
 
