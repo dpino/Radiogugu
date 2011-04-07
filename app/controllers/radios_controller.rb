@@ -85,7 +85,9 @@ class RadiosController < ApplicationController
     if (@radio.user == nil)
       @radio = save_as_user_copy(@radio)
     end
-    puts "Genders: " + @radio.genders
+
+    genders = retrieve_or_create_genders_DB(params[:radio][:gender])
+    # genders = associate_genders_with_user(genders)
 
     respond_to do |format|
       if @radio.update_attributes(params[:radio])
@@ -99,6 +101,25 @@ class RadiosController < ApplicationController
       end
     end
   end
+
+  def retrieve_or_create_genders_DB(genders)
+    result = Array.new
+    genders.split(" ").each { |gender|
+      record = Gender.where("name = ?", gender)
+      if (record.empty?)
+        record = Gender.new(:name => gender)
+        record.save
+      end
+      result << record
+    }
+    return result
+  end
+
+  #def associate_genders_with_user(genders)
+  #  genders.each { |gender|
+  #
+  #  }
+  #end
 
   def save_as_user_copy(radio)
     newRadio = radio.clone
