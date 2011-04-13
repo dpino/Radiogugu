@@ -33,7 +33,7 @@ ActiveRecord::Schema.define(:version => 20110407215208) do
     t.datetime "updated_at"
   end
 
-  create_table "genders_radios", :id => false, :force => true do |t|
+  create_table "genders_radios", :force => true do |t|
     t.integer "gender_id"
     t.integer "radio_id"
     t.integer "user_id"

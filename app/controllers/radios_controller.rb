@@ -86,8 +86,12 @@ class RadiosController < ApplicationController
       @radio = save_as_user_copy(@radio)
     end
 
+    # Prepare genders and save them
     genders = retrieve_or_create_genders_DB(params[:radio][:gender])
-    # genders = associate_genders_with_user(genders)
+    if (!genders.empty?)
+      genders_radio = associate_genders_with_radio_and_user(genders)
+      save_genders_for_radio(genders_radio)
+    end
 
     respond_to do |format|
       if @radio.update_attributes(params[:radio])
@@ -102,10 +106,17 @@ class RadiosController < ApplicationController
     end
   end
 
+  def save_genders_for_radio(genders_radio)
+    # Check if there are radios for this radio and user, in that case remove them
+    genders_radio.each { |gender_radio|
+      gender_radio.save
+    }
+  end
+
   def retrieve_or_create_genders_DB(genders)
     result = Array.new
     genders.split(" ").each { |gender|
-      record = Gender.where("name = ?", gender)
+      record = Gender.where("name = ?", gender).first
       if (record.empty?)
         record = Gender.new(:name => gender)
         record.save
@@ -115,11 +126,17 @@ class RadiosController < ApplicationController
     return result
   end
 
-  #def associate_genders_with_user(genders)
-  #  genders.each { |gender|
-  #
-  #  }
-  #end
+  def associate_genders_with_radio_and_user(genders)
+    result = Array.new
+    genders.each { |gender|
+      gender_radio = GendersRadio.new
+      gender_radio.gender_id = gender.id
+      gender_radio.radio_id = @radio.id
+      gender_radio.user_id = current_user.id
+      result << gender_radio
+    }
+    return result
+  end
 
   def save_as_user_copy(radio)
     newRadio = radio.clone
