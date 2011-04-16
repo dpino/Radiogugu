@@ -21,11 +21,29 @@ class RadiosController < ApplicationController
     return original_radios + user_radios
   end
 
+  def redirect_to_child_if_any(radio_id)
+    if (current_user != nil)
+      user_radio = Radio.where("user_id = ? and parent_id = ?", current_user.id, params[:id]).first
+      if (user_radio != nil)
+        response.redirect url_for(:id => user_radio.id, :action => 'show')
+      end
+    end
+  end
+
   # GET /radios/1
   # GET /radios/1.xml
   def show
-    @radio = Radio.find(params[:id])
-    @is_favorite = is_favorite(@radio.id)
+    # If user is logged, check if there's a child for this radio
+    # and redirect to it if that's the case
+    radio_id = params[:id]
+    redirect_to_child_if_any(radio_id)
+
+    @radio = Radio.find(radio_id)
+
+    # Check if it's favorite
+    if (@radio != nil)
+      @is_favorite = is_favorite(@radio.id)
+    end
     @active_tab = :gender
 
     respond_to do |format|
