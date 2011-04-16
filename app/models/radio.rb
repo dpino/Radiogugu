@@ -16,4 +16,21 @@ class Radio < ActiveRecord::Base
   # Fake properties (only used in Views)
   attr_accessor :location_str
 
+  def create(user)
+    child = self.clone
+    child.user = user
+    child.parent = self
+    child.save
+    return child
+  end
+
+  def exits_child(user)
+    return get_child(user) != nil
+  end
+
+  def get_child(user)
+    result = Radio.where("user_id = ? and parent_id = ?", user.id, self.id).first
+    return result != nil ? result : nil;
+  end
+
 end

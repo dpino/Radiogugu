@@ -83,7 +83,7 @@ class RadiosController < ApplicationController
 
     # User logged, but modifying original radio
     if (@radio.user == nil)
-      @radio = save_as_user_copy(@radio)
+      @radio = retrieve_or_create_child(@radio)
     end
 
     # Prepare genders and save them
@@ -108,6 +108,7 @@ class RadiosController < ApplicationController
 
   def save_genders_for_radio(genders_radio)
     # Check if there are radios for this radio and user, in that case remove them
+    GendersRadio.delete_all(["user_id = ? and radio_id = ?", current_user.id, @radio.id]);
     genders_radio.each { |gender_radio|
       gender_radio.save
     }
@@ -117,7 +118,7 @@ class RadiosController < ApplicationController
     result = Array.new
     genders.split(" ").each { |gender|
       record = Gender.where("name = ?", gender).first
-      if (record.empty?)
+      if (record == nil)
         record = Gender.new(:name => gender)
         record.save
       end
@@ -138,13 +139,15 @@ class RadiosController < ApplicationController
     return result
   end
 
-  def save_as_user_copy(radio)
-    newRadio = radio.clone
-    newRadio.user = current_user
-    newRadio.parent = radio
-    newRadio.save
-    # save_tags(newRadio)
-    return newRadio
+  def retrieve_or_create_child(radio)
+    # Check if the user already has a child for this radio
+    user_radio = @radio.get_child(current_user)
+    if (user_radio == nil)
+      return radio.create(current_user)
+    end
+    # In case it had, update child with params
+    user_radio.update_attributes(params[:radio]);
+    return user_radio
   end
 
   # DELETE /radios/1
