@@ -99,8 +99,10 @@ class RadiosController < ApplicationController
         format.html { redirect_to(@radio, :notice => 'Radio was successfully updated.') }
         format.xml  { head :ok }
         format.json {
-            render :json => @radio, :status => :ok
-            # FIXME Should redirect to new URL if a new radio was created
+          if (original_radio_id == @radio.id)
+            render :json => @radio
+          else
+            render :json => { :redirect_to => @radio.id }
           end
         }
       else

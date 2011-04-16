@@ -108,11 +108,21 @@ $(document).ready(function() {
       url: '/radios/' + id + '.json',
       data: {_method:'PUT', radio: radio},
       dataType: 'json',
-      success: function(msg) {
+      success: function(result) {
+        var radio_id = result.redirect_to;
+        if (radio_id != undefined) {
+          jump_to(radio_id) ;
+        }
         $('#radio-station-data').animate({backgroundColor:"yellow"},  100);
         $('#radio-station-data').animate({backgroundColor:"#d3d3d3" },  1000);
       }
     });
+  }
+
+  function jump_to(radio_id) {
+    var href = location.href;
+    var target = href.substr(0, href.lastIndexOf("/") + 1) + radio_id;
+    window.location = target;
   }
 
   function editRadioStation(node) {
