@@ -16,7 +16,7 @@ class Radio < ActiveRecord::Base
   # Fake properties (only used in Views)
   attr_accessor :location_str
 
-  def create(user)
+  def fork(user)
     child = self.clone
     child.user = user
     child.parent = self

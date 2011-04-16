@@ -77,6 +77,7 @@ class RadiosController < ApplicationController
   # PUT /radios/1.xml
   def update
     @radio = Radio.find(params[:id])
+    original_radio_id = @radio.id
 
     # User not logged, cannot modify radio
     return if (current_user == nil)
@@ -97,7 +98,11 @@ class RadiosController < ApplicationController
       if @radio.update_attributes(params[:radio])
         format.html { redirect_to(@radio, :notice => 'Radio was successfully updated.') }
         format.xml  { head :ok }
-        format.json { render :json => @radio, :status => :ok }
+        format.json {
+            render :json => @radio, :status => :ok
+            # FIXME Should redirect to new URL if a new radio was created
+          end
+        }
       else
         format.html { render :action => "edit" }
         format.xml  { render :xml => @radio.errors, :status => :unprocessable_entity }
@@ -143,7 +148,7 @@ class RadiosController < ApplicationController
     # Check if the user already has a child for this radio
     user_radio = @radio.get_child(current_user)
     if (user_radio == nil)
-      return radio.create(current_user)
+      return radio.fork(current_user)
     end
     # In case it had, update child with params
     user_radio.update_attributes(params[:radio]);
