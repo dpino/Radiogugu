@@ -1,103 +1,93 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta name="generator" content="HTML Tidy for Linux (vers 25 March 2009), see www.w3.org" /><!-- Meta -->
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
 
-    <!-- Meta -->
-    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-    <meta name="keywords" content="">
-    <meta name="description" content="">
+  <title>Radiogugu</title><!-- Include css & javascript -->
 
-    <title>Radiogugu</title>
+  <%= stylesheet_link_tag :all %>
+  <%= javascript_include_tag :defaults %>
+  <%= csrf_meta_tag %>
 
-    <!-- Include css & javascript -->
-    <%= stylesheet_link_tag :all %>
-    <%= javascript_include_tag :defaults %>
-    <%= csrf_meta_tag %>
+  <style type="text/css">
+    /*<![CDATA[*/
+    body {
+      background: white;
+    }
+    div.yui-b {
+      margin-left: 100px;
+      margin-right: 100px;
+    }
+    /*]]>*/
+  </style>
 
-    <style type="text/css">
-      body {
-        background: white;
-      }
-      div.yui-b {
-        margin-left: 100px;
-        margin-right: 100px;
-      }
-    </style>
-
+  <style type="text/css">
+    /*<![CDATA[*/
+    div.c4 {background: color}
+    span.c3 {font-weight: bold}
+    div.c2 {clear: both}
+    span.c1 {float: right; padding-right: 20px; color: white}
+    /*]]>*/
+  </style>
 </head>
 
 <body>
-
-<div id="doc3" class="yui-t7">
-
+  <div id="doc3" class="yui-t7">
     <div id="hd">
-        <!-- Header -->
-        <div>
-            <%= image_tag("radio_gugu_logo_mini3.png") %>
-            <% if user_signed_in? %>
-              <span style="float: right; padding-right: 20px; color: white">
-                <span><%= current_user.username %>, </span>
-                <%= link_to "Sign out", destroy_user_session_path %>
-              </span>
-            <% else %>
-              <%= link_to image_tag("sign_up.png", :width => "120px", :style => "float: right; padding-right: 10px" ), new_user_registration_path %>
-            <% end %>
-        </div>
-  </div>
+      <!-- Header -->
 
+      <div>
+        <%= image_tag("radio_gugu_logo_mini3.png") %><% if user_signed_in? %> <span class="c1"><span><%= current_user.username %>,</span> <%= link_to "Sign out", destroy_user_session_path %></span> <% else %>
+        <%= link_to image_tag("sign_up.png", :width => "120px", :style => "float: right; padding-right: 10px" ), new_user_registration_path %> <% end %>
+      </div>
+    </div>
 
-  <div class="menubar">
-    <ul class="tabs">
-      <%
-        tabs = Hash.new
-        tabs[:home] = url_for(:controller => '/home')
-        tabs[:countries] = countries_path
-        tabs[:genders] = genders_path
+    <div class="menubar">
+      <ul class="tabs">
+        <%
+                tabs = Hash.new
+                tabs[:home] = url_for(:controller => '/home')
+                tabs[:countries] = countries_path
+                tabs[:genders] = genders_path
 
-        [:home, :countries, :genders].each do |key|
-          if session[:active_tab] == nil || key == session[:active_tab] %>
-            <li class="active">
-          <% else %>
-            <li>
-          <% end %>
-          <%= link_to key, tabs[key] %></li>
-        <% end %>
-    </ul>
+                [:home, :countries, :genders].each do |key|
+                  if session[:active_tab] == nil || key == session[:active_tab] %>
 
-    <form>
-      <input type="text" value="Search this site" />
-      <input type="submit" value="Go!" />
-    </form>
-  </div>
+        <li class="active"><% else %></li>
+
+        <li><% end %><%= link_to key, tabs[key] %></li><% end %>
+      </ul>
+
+      <form>
+        <input type="text" value="Search this site" /> <input type="submit" value="Go!" />
+      </form>
+    </div>
 
     <div id="bd">
-        <div id="yui-main">
-            <div class="yui-b">
-                <!-- Main content -->
-                <%= yield %>
-            </div>
-        </div>
+      <div class="yui-b" id="yui-main">
+        <!-- Main content -->
+        <%= yield %>
+      </div><!-- Secondary content -->
 
-        <!-- Secondary content -->
-        <div style="clear: both" class="yui-b">
+      <div class="yui-b c2"></div>
+    </div><!-- Footer -->
 
-    </div>
-    </div>
+    <div id="ft" class="c4">
+      <span class="c3">Contact us</span>
 
-    <!-- Footer -->
-    <div id="ft" style="background: color">
-    <span><b>Contact us</b></span>
       <div id="contact-list">
-        <span>info(at)radiogugu.com</span>
-        <span>twitter radiogugu</span>
-        <span>facebook radiogugu</span>
+        <span>info(at)radiogugu.com</span> <span>twitter radiogugu</span> <span>facebook radiogugu</span>
       </div>
+
       <div>
         <p>Copyright RadioGugu @ 2011</p>
       </div>
     </div>
-
-</div>
-
+  </div>
 </body>
 </html>
