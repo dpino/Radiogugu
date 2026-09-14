@@ -1,3 +1,3 @@
-class Location < ActiveRecord::Base
-	has_many :radios
+class Location < ApplicationRecord
+  has_many :radios
 end

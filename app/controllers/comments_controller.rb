@@ -1,43 +1,39 @@
 class CommentsController < ApplicationController
-
-  # GET /Comments
-  # GET /Comments.xml
+  # GET /comments
   def index
-    puts "index comments"
-    @Comments = Comment.find(:all, :order => "updated_at desc")
+    @comments = Comment.order(updated_at: :desc)
     respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @Comments }
+      format.html
+      format.xml { render xml: @comments }
     end
   end
 
-  # GET /Comments/1
-  # GET /Comments/1.xml
+  # GET /comments/1
   def show
-    puts "show comments"
-    @Comment = Comment.find(params[:id], :order => "updated_at desc")
+    @comment = Comment.find(params[:id])
     respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @Comment }
+      format.html
+      format.xml { render xml: @comment }
     end
   end
 
-  # POST /comments
-  # POST /comments.xml
+  # POST /radios/:radio_id/comments
   def create
     @radio = Radio.find(params[:radio_id])
-    comment = @radio.comments.create({:body => params[:comment], :user_id => current_user.id});
+    comment = @radio.comments.create(body: params[:comment], user_id: current_user.id)
     respond_to do |format|
-      format.json { render :json => to_commentDTO(comment), :status => :ok }
+      format.json { render json: to_comment_dto(comment), status: :ok }
     end
   end
 
-  def to_commentDTO(comment)
-    return {
-      :body => comment.body,
-      :username => comment.user.username,
-      :useremail => comment.user.email,
-      :time_distance => distance_of_time_until_today(DateTime.parse(comment.updated_at.to_s))}
-  end
+  private
 
+  def to_comment_dto(comment)
+    {
+      body: comment.body,
+      username: comment.user.username,
+      useremail: comment.user.email,
+      time_distance: distance_of_time_until_today(DateTime.parse(comment.updated_at.to_s))
+    }
+  end
 end

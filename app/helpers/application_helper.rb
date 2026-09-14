@@ -3,7 +3,11 @@ module ApplicationHelper
   DOUBLE_ARROW = " >> "
 
   def location_breadcrumb(station)
-    location = Location.find(station.location_id)
+    return "" if station.location_id.nil?
+
+    location = Location.find_by(id: station.location_id)
+    return "" if location.nil?
+
     order = session[:sort_order]
 
     continent_url = continent_url(location[:continent])

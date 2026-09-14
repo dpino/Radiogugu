@@ -1,189 +1,167 @@
 class RadiosController < ApplicationController
-  # GET /radios
-  # GET /radios.xml
   def index
-    @radios = all_radios()
+    @radios = all_radios
     @active_tab = :gender
 
     respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @radios }
+      format.html
+      format.xml { render xml: @radios }
     end
   end
 
-  def all_radios()
-    return current_user == nil ? Radio.all : all_radios_for_user()
+  def all_radios
+    current_user.nil? ? Radio.all : all_radios_for_user
   end
 
-  def all_radios_for_user(radios)
-    user_radios = Radio.where("user_id = ?", current_user.id)
-    original_radios = Radio.where("user_id = null AND id NOT IN (?)", user_radios)
-    return original_radios + user_radios
+  def all_radios_for_user
+    user_radios = Radio.where(user_id: current_user.id)
+    original_radios = Radio.where(user_id: nil).where.not(id: user_radios.select(:parent_id))
+    original_radios.to_a + user_radios.to_a
   end
 
   def redirect_to_child_if_any(radio_id)
-    if (current_user != nil)
-      user_radio = Radio.where("user_id = ? and parent_id = ?", current_user.id, params[:id]).first
-      if (user_radio != nil)
-        response.redirect url_for(:id => user_radio.id, :action => 'show')
-      end
+    return if current_user.nil?
+
+    user_radio = Radio.where(user_id: current_user.id, parent_id: radio_id).first
+    if user_radio
+      redirect_to radio_path(user_radio)
     end
   end
 
   # GET /radios/1
-  # GET /radios/1.xml
   def show
     # If user is logged, check if there's a child for this radio
     # and redirect to it if that's the case
     radio_id = params[:id]
     redirect_to_child_if_any(radio_id)
+    return if performed?
 
     @radio = Radio.find(radio_id)
-
-    # Check if it's favorite
-    if (@radio != nil)
-      @is_favorite = is_favorite(@radio.id)
-    end
+    @is_favorite = is_favorite(@radio.id) if @radio
     @active_tab = :gender
 
     respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @radio }
+      format.html
+      format.xml { render xml: @radio }
     end
   end
 
   def is_favorite(radio_id)
-    if (current_user != nil)
-      return Favorite.exists?(["user_id = ? AND radio_id = ?", current_user.id, radio_id])
-    end
-    return false
+    return false unless current_user
+
+    Favorite.exists?(user_id: current_user.id, radio_id: radio_id)
   end
 
-  # GET /radios/new
-  # GET /radios/new.xml
   def new
     @radio = Radio.new
 
     respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @radio }
+      format.html
+      format.xml { render xml: @radio }
     end
   end
 
-  # GET /radios/1/edit
   def edit
     @radio = Radio.find(params[:id])
   end
 
-  # POST /radios
-  # POST /radios.xml
   def create
-    @radio = Radio.new(params[:radio])
+    @radio = Radio.new(radio_params)
 
     respond_to do |format|
       if @radio.save
-        format.html { redirect_to(@radio, :notice => 'Radio was successfully created.') }
-        format.xml  { render :xml => @radio, :status => :created, :location => @radio }
+        format.html { redirect_to(@radio, notice: "Radio was successfully created.") }
+        format.xml { render xml: @radio, status: :created, location: @radio }
       else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @radio.errors, :status => :unprocessable_entity }
+        format.html { render action: "new" }
+        format.xml { render xml: @radio.errors, status: :unprocessable_entity }
       end
     end
   end
 
-  # PUT /radios/1
-  # PUT /radios/1.xml
   def update
     @radio = Radio.find(params[:id])
     original_radio_id = @radio.id
 
     # User not logged, cannot modify radio
-    return if (current_user == nil)
+    return if current_user.nil?
 
     # User logged, but modifying original radio
-    if (@radio.user == nil)
+    if @radio.user.nil?
       @radio = retrieve_or_create_child(@radio)
     end
 
     # Prepare genders and save them
-    genders = retrieve_or_create_genders_DB(params[:radio][:gender])
-    if (!genders.empty?)
+    genders = retrieve_or_create_genders_db(params.dig(:radio, :gender))
+    if genders.present?
       genders_radio = associate_genders_with_radio_and_user(genders)
       save_genders_for_radio(genders_radio)
     end
 
     respond_to do |format|
-      if @radio.update_attributes(params[:radio])
-        format.html { redirect_to(@radio, :notice => 'Radio was successfully updated.') }
-        format.xml  { head :ok }
-        format.json {
-          if (original_radio_id == @radio.id)
-            render :json => @radio
+      if @radio.update(radio_params)
+        format.html { redirect_to(@radio, notice: "Radio was successfully updated.") }
+        format.xml { head :ok }
+        format.json do
+          if original_radio_id == @radio.id
+            render json: @radio
           else
-            render :json => { :redirect_to => @radio.id }
+            render json: { redirect_to: @radio.id }
           end
-        }
+        end
       else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @radio.errors, :status => :unprocessable_entity }
-        format.json { render :json => @radio, :status => :ok }
+        format.html { render action: "edit" }
+        format.xml { render xml: @radio.errors, status: :unprocessable_entity }
+        format.json { render json: @radio, status: :ok }
       end
     end
   end
 
   def save_genders_for_radio(genders_radio)
     # Check if there are radios for this radio and user, in that case remove them
-    GendersRadio.delete_all(["user_id = ? and radio_id = ?", current_user.id, @radio.id]);
-    genders_radio.each { |gender_radio|
-      gender_radio.save
-    }
+    GendersRadio.where(user_id: current_user.id, radio_id: @radio.id).delete_all
+    genders_radio.each(&:save)
   end
 
-  def retrieve_or_create_genders_DB(genders)
-    result = Array.new
-    genders.split(" ").each { |gender|
-      record = Gender.where("name = ?", gender).first
-      if (record == nil)
-        record = Gender.new(:name => gender)
-        record.save
-      end
-      result << record
-    }
-    return result
+  def retrieve_or_create_genders_db(genders)
+    return [] if genders.blank?
+
+    genders.split(" ").map do |gender|
+      Gender.find_or_create_by(name: gender)
+    end
   end
 
   def associate_genders_with_radio_and_user(genders)
-    result = Array.new
-    genders.each { |gender|
-      gender_radio = GendersRadio.new
-      gender_radio.gender_id = gender.id
-      gender_radio.radio_id = @radio.id
-      gender_radio.user_id = current_user.id
-      result << gender_radio
-    }
-    return result
+    genders.map do |gender|
+      GendersRadio.new(gender_id: gender.id, radio_id: @radio.id, user_id: current_user.id)
+    end
   end
 
   def retrieve_or_create_child(radio)
     # Check if the user already has a child for this radio
     user_radio = @radio.get_child(current_user)
-    if (user_radio == nil)
+    if user_radio.nil?
       return radio.fork(current_user)
     end
+
     # In case it had, update child with params
-    user_radio.update_attributes(params[:radio]);
-    return user_radio
+    user_radio.update(radio_params)
+    user_radio
   end
 
-  # DELETE /radios/1
-  # DELETE /radios/1.xml
   def destroy
     @radio = Radio.find(params[:id])
     @radio.destroy
 
     respond_to do |format|
       format.html { redirect_to(radios_url) }
-      format.xml  { head :ok }
+      format.xml { head :ok }
     end
+  end
+
+  private
+
+  def radio_params
+    params.require(:radio).permit(:name, :website, :url, :gender, :location_id)
   end
 end

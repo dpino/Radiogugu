@@ -1,4 +1,4 @@
-class Favorite < ActiveRecord::Base
+class Favorite < ApplicationRecord
   belongs_to :radio
-  has_many :users
+  belongs_to :user
 end

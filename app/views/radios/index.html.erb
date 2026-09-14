@@ -21,7 +21,7 @@
     <td><%= radio.location_id %></td>
     <td><%= link_to 'Show', radio %></td>
     <td><%= link_to 'Edit', edit_radio_path(radio) %></td>
-    <td><%= link_to 'Destroy', radio, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%= link_to 'Destroy', radio, data: { confirm: 'Are you sure?', method: :delete } %></td>
   </tr>
 <% end %>
 </table>

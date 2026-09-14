@@ -1,34 +1,37 @@
-source 'http://rubygems.org'
+source "https://rubygems.org"
 
-gem 'rails', '3.0.3'
+ruby "3.2.3"
 
-# Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
-# gem 'sqlite3-ruby', :require => 'sqlite3'
+gem "rails", "~> 7.1.5"
 
-gem 'mysql2'
+# Classic asset pipeline (keeps the app's existing jQuery-based JS/CSS working
+# without moving to Turbo/Stimulus/importmaps).
+gem "sprockets-rails"
 
-gem 'devise'
+# jQuery + jquery-ujs (data-method / data-confirm support for plain links),
+# replacing the vendored jquery-1.5.js / jquery-ujs that shipped with the app.
+gem "jquery-rails"
+gem "jquery-ui-rails"
 
-# Use unicorn as the web server
-# gem 'unicorn'
+# Use sqlite3 as the database for Active Record (all environments)
+gem "sqlite3", ">= 1.4"
 
-# Deploy with Capistrano
-# gem 'capistrano'
+# Use the Puma web server
+gem "puma", ">= 5.0"
 
-# To use debugger (ruby-debug for Ruby 1.8.7+, ruby-debug19 for Ruby 1.9.2+)
-# gem 'ruby-debug'
-# gem 'ruby-debug19'
+# Authentication
+gem "devise"
 
-# Bundle the extra gems:
-# gem 'bj'
-# gem 'nokogiri'
-# gem 'sqlite3-ruby', :require => 'sqlite3'
-# gem 'aws-s3', :require => 'aws/s3'
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem "tzinfo-data", platforms: %i[ windows jruby ]
 
-# Bundle gems for the local environment. Make sure to
-# put test-only gems in this group so their generators
-# and rake tasks are available in development mode:
-# group :development, :test do
-#   gem 'webrat'
-# end
+# Reduces boot times through caching; required in config/boot.rb
+gem "bootsnap", require: false
+
+group :development, :test do
+  gem "debug", platforms: %i[ mri windows ]
+end
+
+group :development do
+  gem "web-console"
+end
