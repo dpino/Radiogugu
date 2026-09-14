@@ -9,6 +9,7 @@ class Radio < ApplicationRecord
   belongs_to :parent, class_name: "Radio", optional: true
 
   has_many :comments, -> { order(updated_at: :desc) }
+  has_many :transcripts
 
   has_many :genders_radios
   has_many :genders, through: :genders_radios

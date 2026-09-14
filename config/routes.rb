@@ -20,6 +20,8 @@ Rails.application.routes.draw do
     resource :comments
     member do
       get "now_playing"
+      get "transcript"
+      post "transcript_chunks", action: :create_transcript_chunk
     end
   end
 

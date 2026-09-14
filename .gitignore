@@ -26,3 +26,6 @@
 
 # Ignore master key for decrypting credentials and any other unencrypted secrets.
 /config/master.key
+
+# Local transcription prototype's Python virtualenv (see transcriber/README.md)
+/transcriber/venv

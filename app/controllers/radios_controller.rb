@@ -1,4 +1,6 @@
 class RadiosController < ApplicationController
+  skip_before_action :verify_authenticity_token, only: [:create_transcript_chunk]
+
   def index
     @radios = all_radios
     @active_tab = :gender
@@ -61,6 +63,40 @@ class RadiosController < ApplicationController
   def now_playing
     radio = Radio.find(params[:id])
     render json: { title: IcyNowPlaying.fetch_title(radio.url) }
+  end
+
+  # GET /radios/1/transcript
+  #
+  # Prototype: live, local speech-to-text of the stream, produced out of band
+  # by script/transcribe.py (not by the Rails app itself) and stored here.
+  # Only ever has data for whichever station that script is currently
+  # pointed at - for every other radio this just returns an empty list.
+  def transcript
+    radio = Radio.find(params[:id])
+    since_id = params[:since_id].presence&.to_i || 0
+
+    lines = radio.transcripts.where("id > ?", since_id).order(:id).limit(50)
+    render json: {
+      lines: lines.map { |t| { id: t.id, text: t.text, started_at: t.started_at } },
+    }
+  end
+
+  # POST /radios/1/transcript_chunks
+  #
+  # Called by script/transcribe.py, authenticated with a shared secret
+  # (TRANSCRIBE_TOKEN) rather than a user session - this is a local
+  # background script, not a browser request.
+  def create_transcript_chunk
+    expected = ENV["TRANSCRIBE_TOKEN"]
+    head :unauthorized and return if expected.blank? || request.headers["X-Transcribe-Token"] != expected
+
+    radio = Radio.find(params[:id])
+    radio.transcripts.create!(
+      text: params.require(:text),
+      started_at: params[:started_at],
+      ended_at: params[:ended_at]
+    )
+    head :ok
   end
 
   def new
