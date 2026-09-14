@@ -39,7 +39,6 @@ a.sign-up-button:hover {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: opacity 0.3s;
 }
 
 .transcript-line.past {
@@ -51,24 +50,6 @@ a.sign-up-button:hover {
   font-weight: bold;
   background: #fff3b0;
   border-radius: 3px;
-}
-
-/* Fade by distance from the current line (row 5) - farther away (either
-   direction) fades more; see transcript.js for how dist-N is assigned. */
-.transcript-line.dist-1 {
-  opacity: 0.82;
-}
-
-.transcript-line.dist-2 {
-  opacity: 0.64;
-}
-
-.transcript-line.dist-3 {
-  opacity: 0.46;
-}
-
-.transcript-line.dist-4 {
-  opacity: 0.3;
 }
 
 .transcript-line.upcoming {

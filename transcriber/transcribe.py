@@ -2,15 +2,28 @@
 """
 Prototype: live, local speech-to-text for a single radio station.
 
-Loops forever: captures a short chunk of the stream with ffmpeg, transcribes
-it locally with faster-whisper (no external API, no network dependency once
-the model is downloaded), and POSTs the resulting text to the Rails app,
-which stores it and serves it to the station's page.
+Opens ONE persistent connection to the stream with ffmpeg and reads it as a
+continuous raw PCM feed, slicing off fixed-size chunks as they arrive in
+real time and transcribing each locally with faster-whisper (no external
+API, no network dependency once the model is downloaded). Each chunk's text
+is POSTed to the Rails app, which stores it and serves it to the station's
+page.
 
-This is intentionally a standalone script rather than a Rails background job:
-it needs a long-lived ffmpeg subprocess and a loaded Whisper model, which
-doesn't fit the request/response lifecycle, and this app has no job queue
-(Sidekiq/etc.) set up to run persistent workers.
+Earlier version reconnected fresh (`ffmpeg -i url -t 10 ...`) for every
+chunk. That turned out to be a real bug, not just inefficient: many live
+stream CDNs (including this one) serve a burst of already-buffered content
+rapidly on a brand new connection rather than only real-time bytes, so a
+fresh "10 second" capture could finish in ~1 real second - each chunk was
+mostly re-grabbing overlapping, already-buffered audio rather than
+sequential live content, which is why chunks arrived every ~2-4s instead of
+~10s and why consecutive lines overlapped so much. Reading continuously off
+one persistent connection doesn't have that problem: ffmpeg naturally
+blocks for more data at whatever pace the live stream actually delivers it.
+
+This is intentionally a standalone script rather than a Rails background
+job: it needs a long-lived ffmpeg subprocess and a loaded Whisper model,
+which doesn't fit the request/response lifecycle, and this app has no job
+queue (Sidekiq/etc.) set up to run persistent workers.
 
 Usage:
   source transcriber/venv/bin/activate
@@ -22,27 +35,42 @@ import argparse
 import os
 import subprocess
 import sys
-import tempfile
 import time
 from datetime import datetime, timezone
 
+import numpy as np
 import requests
 from faster_whisper import WhisperModel
 
+SAMPLE_RATE = 16000
+BYTES_PER_SAMPLE = 2  # s16le
 
-def capture_chunk(stream_url, seconds, wav_path):
-    """Blocks for ~`seconds` while ffmpeg pulls that much audio from the stream."""
-    subprocess.run(
+
+def start_ffmpeg(stream_url):
+    return subprocess.Popen(
         [
-            "ffmpeg", "-y", "-loglevel", "error",
+            "ffmpeg", "-loglevel", "error",
             "-i", stream_url,
-            "-t", str(seconds),
-            "-ar", "16000", "-ac", "1",
-            "-f", "wav", wav_path,
+            "-ar", str(SAMPLE_RATE), "-ac", "1",
+            "-f", "s16le", "-",
         ],
-        check=True,
-        timeout=seconds + 15,
+        stdout=subprocess.PIPE,
     )
+
+
+def read_exact(pipe, n):
+    """Blocks until exactly n bytes are read, or returns None if the stream ended."""
+    buf = bytearray()
+    while len(buf) < n:
+        piece = pipe.read(n - len(buf))
+        if not piece:
+            return None
+        buf.extend(piece)
+    return bytes(buf)
+
+
+def pcm_to_float32(raw_bytes):
+    return np.frombuffer(raw_bytes, dtype=np.int16).astype(np.float32) / 32768.0
 
 
 def main():
@@ -58,28 +86,30 @@ def main():
     if not token:
         sys.exit("TRANSCRIBE_TOKEN env var is required (must match the Rails app's TRANSCRIBE_TOKEN)")
 
+    chunk_bytes = args.chunk_seconds * SAMPLE_RATE * BYTES_PER_SAMPLE
+
     print(f"Loading Whisper model '{args.model}'...", flush=True)
     model = WhisperModel(args.model, device="cpu", compute_type="int8")
     print("Model loaded. Starting transcription loop (Ctrl-C to stop).", flush=True)
 
     endpoint = f"{args.base_url}/radios/{args.radio_id}/transcript_chunks"
 
-    while True:
-        with tempfile.NamedTemporaryFile(suffix=".wav") as tmp:
+    proc = start_ffmpeg(args.stream_url)
+    try:
+        while True:
             started_at = datetime.now(timezone.utc)
-            try:
-                capture_chunk(args.stream_url, args.chunk_seconds, tmp.name)
-            except subprocess.CalledProcessError as e:
-                print(f"ffmpeg failed ({e}); retrying in 5s", file=sys.stderr, flush=True)
-                time.sleep(5)
-                continue
-            except subprocess.TimeoutExpired:
-                print("ffmpeg timed out; retrying", file=sys.stderr, flush=True)
-                continue
-
+            raw = read_exact(proc.stdout, chunk_bytes)
             ended_at = datetime.now(timezone.utc)
 
-            segments, info = model.transcribe(tmp.name, beam_size=5)
+            if raw is None:
+                print("Stream connection ended; reconnecting in 3s...", file=sys.stderr, flush=True)
+                proc.wait()
+                time.sleep(3)
+                proc = start_ffmpeg(args.stream_url)
+                continue
+
+            audio = pcm_to_float32(raw)
+            segments, info = model.transcribe(audio, beam_size=5)
             text = " ".join(seg.text.strip() for seg in segments).strip()
 
             if not text:
@@ -100,6 +130,8 @@ def main():
                 )
             except requests.RequestException as e:
                 print(f"Failed to post transcript chunk: {e}", file=sys.stderr, flush=True)
+    finally:
+        proc.terminate()
 
 
 if __name__ == "__main__":
