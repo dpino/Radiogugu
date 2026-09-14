@@ -7,11 +7,12 @@
 // Transcription runs much faster than real-time (a 10s chunk transcribes in
 // well under a second), so new lines land well ahead of what a listener is
 // actually hearing. Rather than hide that, every line is shown as soon as
-// it arrives, but only the one whose [started_at, ended_at] window contains
-// the current wall-clock time is highlighted as "current" - everything
+// it arrives, but only the most recent one whose started_at has actually
+// been reached by the wall clock is highlighted as "current" - everything
 // after it is visibly upcoming, not yet "reached". This tracks the
 // server's own capture clock, not the listener's actual (buffered)
-// playback position, so it's an approximation, not frame-accurate sync.
+// playback position, so it's an approximation of "what's playing now", not
+// frame-accurate sync.
 (function() {
   function startTranscriptPolling(transcriptUrl, targetEl, intervalMs) {
     var sinceId = 0;
@@ -44,23 +45,25 @@
 
     function highlightCurrentLine() {
       var now = new Date();
-      var current = null;
 
-      lines.forEach(function(line) {
-        if (!line.startedAt) return;
-
-        if (line.startedAt <= now && (!line.endedAt || now <= line.endedAt)) {
-          current = line;
-        } else if (line.startedAt <= now) {
-          line.el.className = "transcript-line past";
-        } else {
-          line.el.className = "transcript-line upcoming";
-        }
+      // "Current" = the most recent line whose started_at the wall clock has
+      // reached - not "now falls inside [started_at, ended_at]", since
+      // there's a real gap between chunks (ffmpeg + transcription
+      // overhead) that a window-based check would fall into, leaving
+      // nothing highlighted at all.
+      var currentIndex = -1;
+      lines.forEach(function(line, i) {
+        if (line.startedAt && line.startedAt <= now) currentIndex = i;
       });
 
-      if (current) {
-        current.el.className = "transcript-line current";
-        current.el.scrollIntoView({ block: "nearest" });
+      lines.forEach(function(line, i) {
+        if (i < currentIndex) line.el.className = "transcript-line past";
+        else if (i === currentIndex) line.el.className = "transcript-line current";
+        else line.el.className = "transcript-line upcoming";
+      });
+
+      if (currentIndex >= 0) {
+        lines[currentIndex].el.scrollIntoView({ block: "nearest" });
       }
     }
 
