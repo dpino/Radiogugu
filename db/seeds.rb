@@ -92,6 +92,7 @@ LOCATIONS = [
   { location: "Macao, Sar Of China", country: "Macau", continent: "Asia" },
   { location: "Kwangsi", country: "China", continent: "Asia" },
   { location: "Shenzhen", country: "China", continent: "Asia" },
+  { location: "Nationwide", country: "Slovakia", continent: "Europe" },
 ].freeze
 
 RADIOS = [
@@ -303,6 +304,12 @@ RADIOS = [
   { name: "深圳生活广播", website: "http://www.szmg.com.cn/", url: "http://lhttp.qingting.fm/live/1273/64k.mp3", gender: "News", location_index: 84 },
   { name: "深圳综艺广播", website: "http://www.szmg.com.cn/", url: "http://lhttp.qingting.fm/live/1271/64k.mp3", gender: "Music", location_index: 84 },
   { name: "深圳龙岗频道", website: "http://www.szmg.com.cn/", url: "http://lhttp.qingting.fm/live/20160/64k.mp3", gender: "Music", location_index: 84 },
+  { name: "Rádio Vlna", website: "http://radiovlna.sk/", url: "http://stream.radiovlna.sk/vlna-hi.mp3", gender: "Oldies", location_index: 85 },
+  { name: "Fun Radio", website: "http://www.funradio.sk/", url: "http://stream.funradio.sk:8000/fun128.mp3", gender: "Pop", location_index: 85 },
+  { name: "SRo1 Rádio Slovensko", website: "https://slovensko.rtvs.sk/", url: "http://live.slovakradio.sk:8000/Slovensko_128.mp3", gender: "News", location_index: 85 },
+  { name: "Radio FM", website: "https://fm.rtvs.sk/", url: "https://icecast.stv.livebox.sk/fm_128.mp3", gender: "Alternative", location_index: 85 },
+  { name: "SRo1 Rádio Slovensko (256k)", website: "http://slovensko.rtvs.sk/", url: "http://live.slovakradio.sk:8000/Slovensko_256.mp3", gender: nil, location_index: 85 },
+  { name: "Fun Radio Dance", website: "http://www.funradio.sk/", url: "http://stream.funradio.sk:8000/dance128.mp3", gender: "Dance", location_index: 85 },
 ].freeze
 
 created_locations = LOCATIONS.map do |attrs|

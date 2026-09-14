@@ -107,6 +107,15 @@ def main():
     parser.add_argument("--stream-url", required=True)
     parser.add_argument("--base-url", default=os.environ.get("RAILS_BASE_URL", "http://localhost:3000"))
     parser.add_argument("--model", default=os.environ.get("WHISPER_MODEL", "base.en"))
+    parser.add_argument(
+        "--language",
+        default=os.environ.get("WHISPER_LANGUAGE"),
+        help="Force faster-whisper's source language (e.g. 'sk') instead of "
+             "auto-detecting it per chunk. Worth setting explicitly for any "
+             "station whose language isn't confidently auto-detected - "
+             "Slovak, for one, got misidentified as Latvian on a real test "
+             "clip and produced garbled text as a result.",
+    )
     parser.add_argument("--chunk-seconds", type=int, default=10)
     parser.add_argument(
         "--translation-model",
@@ -156,7 +165,7 @@ def main():
                 continue
 
             audio = pcm_to_float32(raw)
-            segments, info = model.transcribe(audio, beam_size=5)
+            segments, info = model.transcribe(audio, beam_size=5, language=args.language)
             text = " ".join(seg.text.strip() for seg in segments).strip()
 
             if not text:
