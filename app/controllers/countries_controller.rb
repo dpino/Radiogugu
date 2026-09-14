@@ -97,10 +97,10 @@ class CountriesController < ApplicationController
 
   def radios_in_location(location_id)
     all_radios = Radio.where(user_id: nil, location_id: location_id)
-    return all_radios if current_user.nil?
+    return all_radios.to_a if current_user.nil?
 
     modified_by_user = Radio.where(user_id: current_user.id, location_id: location_id)
-    return all_radios if modified_by_user.empty?
+    return all_radios.to_a if modified_by_user.empty?
 
     other_radios = Radio.where(user_id: nil, location_id: location_id)
                          .where.not(id: parent_ids(modified_by_user))
