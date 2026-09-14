@@ -52,6 +52,17 @@ class RadiosController < ApplicationController
     Favorite.exists?(user_id: current_user.id, radio_id: radio_id)
   end
 
+  # GET /radios/1/now_playing
+  #
+  # Fetched server-side rather than straight from the browser: even when a
+  # stream host allows cross-origin reads of the audio itself, browsers still
+  # hide the icy-metaint response header from JS unless the host also sends
+  # Access-Control-Expose-Headers, which in practice almost none of them do.
+  def now_playing
+    radio = Radio.find(params[:id])
+    render json: { title: IcyNowPlaying.fetch_title(radio.url) }
+  end
+
   def new
     @radio = Radio.new
 

@@ -18,6 +18,9 @@ Rails.application.routes.draw do
 
   resources :radios do
     resource :comments
+    member do
+      get "now_playing"
+    end
   end
 
   root to: "home#index"

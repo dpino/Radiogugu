@@ -13,6 +13,12 @@ a.sign-up-button:hover {
   background: #3b8de0;
 }
 
+#now-playing {
+  margin-top: 6px;
+  font-style: italic;
+  color: #53a3f6;
+}
+
 // Radio stations
 ul.stations-list {
   list-style-position: inside;

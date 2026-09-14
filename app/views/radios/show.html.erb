@@ -43,11 +43,13 @@
     Your browser does not support playing audio streams directly.
     You can still listen via the station's <%= link_to "stream URL", @radio.url %>.
   </audio>
+  <div id="now-playing" hidden></div>
 </div>
 
 <script>
   (function() {
     var audio = document.getElementById('radio-audio');
+    var nowPlaying = document.getElementById('now-playing');
     var src = audio.getAttribute('data-src');
     var isHls = /\.m3u8(\?|$)/i.test(src);
 
@@ -60,6 +62,22 @@
       hls.attachMedia(audio);
     } else {
       audio.src = src;
+    }
+
+    // "Now playing" title, fetched server-side from the stream's own ICY
+    // metadata where available (see now_playing.js) - not every station
+    // supports this, so the line simply never appears when it isn't. Not
+    // attempted for HLS, which uses a different metadata mechanism entirely.
+    if (!isHls && window.RadioGuguNowPlaying) {
+      var stopPolling = null;
+      var nowPlayingUrl = '<%= now_playing_radio_path(@radio) %>';
+      audio.addEventListener('play', function() {
+        if (!stopPolling) stopPolling = window.RadioGuguNowPlaying.start(nowPlayingUrl, nowPlaying);
+      });
+      audio.addEventListener('pause', function() {
+        if (stopPolling) { stopPolling(); stopPolling = null; }
+        nowPlaying.hidden = true;
+      });
     }
   })();
 </script>
