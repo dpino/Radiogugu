@@ -39,11 +39,30 @@
 <br/>
 
 <div id="radioplayer">
-  <audio controls preload="none" src="<%= @radio.url %>">
+  <audio id="radio-audio" controls preload="none" data-src="<%= @radio.url %>">
     Your browser does not support playing audio streams directly.
     You can still listen via the station's <%= link_to "stream URL", @radio.url %>.
   </audio>
 </div>
+
+<script>
+  (function() {
+    var audio = document.getElementById('radio-audio');
+    var src = audio.getAttribute('data-src');
+    var isHls = /\.m3u8(\?|$)/i.test(src);
+
+    // Chrome/Firefox can't play HLS (.m3u8) streams natively - use hls.js for
+    // those. Safari supports HLS natively, and everything else is a regular
+    // MP3/AAC stream the <audio> element already handles on its own.
+    if (isHls && !audio.canPlayType('application/vnd.apple.mpegurl') && window.Hls && Hls.isSupported()) {
+      var hls = new Hls();
+      hls.loadSource(src);
+      hls.attachMedia(audio);
+    } else {
+      audio.src = src;
+    }
+  })();
+</script>
 
 <%= render :partial => "ratings/rate", :locals => { :asset => @radio } %>
 
