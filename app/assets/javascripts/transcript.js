@@ -123,13 +123,18 @@
       var rowHeight = primaryLine.offsetHeight;
       panelEl.style.height = (VISIBLE_ROWS * rowHeight) + "px";
 
-      // Scroll position: sum the actual (possibly two-row) heights of the
-      // CURRENT_ROW-1 entries immediately before the current one, so a
-      // taller Chinese+pinyin entry takes proportionally more of the
-      // window instead of assuming every entry is exactly one row tall.
-      var contextCount = CURRENT_ROW - 1;
+      // Scroll position: the panel's scrollTop needs to be the ABSOLUTE
+      // cumulative height of every entry before the first one that should
+      // be visible - not just the height of that handful of entries
+      // themselves. (Bug fixed here: this used to sum only the
+      // CURRENT_ROW-1 entries immediately before the current one, which
+      // is the right idea for a *relative* offset but was being assigned
+      // directly as scrollTop, an *absolute* one - correct only for the
+      // first few entries of a session, silently wrong for any long
+      // history, where it always parked the view near the very top.)
+      var firstVisibleIndex = Math.max(0, currentIndex - (CURRENT_ROW - 1));
       var targetTop = 0;
-      for (var i = Math.max(0, currentIndex - contextCount); i < currentIndex; i++) {
+      for (var i = 0; i < firstVisibleIndex; i++) {
         targetTop += getEl(lines[i]).offsetHeight;
       }
       panelEl.scrollTop = Math.max(0, targetTop);
