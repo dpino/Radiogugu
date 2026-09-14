@@ -12,8 +12,10 @@ default "base.en" is English-only). Each chunk is also translated locally
 with one or more MarianMT models (--translation-model, default
 Helsinki-NLP/opus-mt-en-es; comma-separate a chain, e.g. zh->en,en->es, for
 source languages with no direct ->es model) unless --no-translate is
-passed. Both are POSTed to the Rails app together, which stores them and
-serves them to the station's page.
+passed. Chinese chunks (detected via faster-whisper's language ID) also get
+a pinyin romanization (pypinyin) alongside the hanzi. All of it is POSTed
+to the Rails app together, which stores it and serves it to the station's
+page.
 
 Earlier version reconnected fresh (`ffmpeg -i url -t 10 ...`) for every
 chunk. That turned out to be a real bug, not just inefficient: many live
@@ -47,6 +49,7 @@ from datetime import datetime, timezone
 import numpy as np
 import requests
 from faster_whisper import WhisperModel
+from pypinyin import Style, pinyin
 from transformers import MarianMTModel, MarianTokenizer
 
 SAMPLE_RATE = 16000
@@ -78,6 +81,10 @@ def read_exact(pipe, n):
 
 def pcm_to_float32(raw_bytes):
     return np.frombuffer(raw_bytes, dtype=np.int16).astype(np.float32) / 32768.0
+
+
+def pinyin_of(text):
+    return " ".join(word[0] for word in pinyin(text, style=Style.TONE))
 
 
 def translate(tokenizer, model, text):
@@ -155,11 +162,15 @@ def main():
             if not text:
                 continue
 
+            chunk_pinyin = pinyin_of(text) if info.language == "zh" else None
+
             translated_text = None
             if translation_chain:
                 translated_text = translate_chain(translation_chain, text)
 
             print(f"[{started_at.strftime('%H:%M:%S')}] {text}", flush=True)
+            if chunk_pinyin:
+                print(f"           ({chunk_pinyin})", flush=True)
             if translated_text:
                 print(f"           -> {translated_text}", flush=True)
 
@@ -168,6 +179,7 @@ def main():
                     endpoint,
                     json={
                         "text": text,
+                        "pinyin": chunk_pinyin,
                         "translated_text": translated_text,
                         "started_at": started_at.isoformat(),
                         "ended_at": ended_at.isoformat(),

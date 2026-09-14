@@ -36,7 +36,11 @@ a.sign-up-button:hover {
   background: #eef6ff;
 }
 
-.transcript-line {
+.transcript-entry {
+  margin: 0;
+}
+
+.transcript-line, .transcript-pinyin {
   margin: 0;
   line-height: 1.4em;
   height: 1.4em;
@@ -45,19 +49,38 @@ a.sign-up-button:hover {
   text-overflow: ellipsis;
 }
 
-.transcript-line.past {
+/* Pinyin romanization, indented under its hanzi line in a distinct color -
+   only present for Chinese-language stations (see transcriber/transcribe.py). */
+.transcript-pinyin {
+  margin-left: 1.5em;
+  font-style: italic;
+  font-size: 0.85em;
+  color: #8a6d3b;
+}
+
+.transcript-entry.past .transcript-line,
+.transcript-entry.past .transcript-pinyin {
   color: #999;
 }
 
-.transcript-line.current {
+.transcript-entry.current .transcript-line {
   color: #000;
   font-weight: bold;
   background: #fff3b0;
   border-radius: 3px;
 }
 
-.transcript-line.upcoming {
+.transcript-entry.current .transcript-pinyin {
+  color: #6b5220;
+  font-weight: bold;
+}
+
+.transcript-entry.upcoming .transcript-line {
   color: #53a3f6;
+}
+
+.transcript-entry.upcoming .transcript-pinyin {
+  color: #7396c9;
 }
 
 // Radio stations

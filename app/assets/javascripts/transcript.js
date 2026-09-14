@@ -1,9 +1,9 @@
 // Prototype: polls /radios/:id/transcript for locally-generated live
-// speech-to-text lines (and their Spanish translation - see
-// transcriber/transcribe.py) and appends them to both the transcript and
-// translation panels in lockstep. Only ever has content for whichever
-// single station the transcriber script is currently pointed at -
-// everywhere else this just stays empty.
+// speech-to-text lines (their pinyin romanization, for Chinese stations,
+// and their Spanish translation - see transcriber/transcribe.py) and
+// appends them to both the transcript and translation panels in lockstep.
+// Only ever has content for whichever single station the transcriber
+// script is currently pointed at - everywhere else this just stays empty.
 //
 // Transcription runs much faster than real-time (a 10s chunk transcribes in
 // well under a second), so a line's started_at is already in the past by
@@ -31,6 +31,30 @@
     return pad(date.getUTCHours()) + ":" + pad(date.getUTCMinutes()) + ":" + pad(date.getUTCSeconds());
   }
 
+  // Builds one entry: a wrapper <div class="transcript-entry"> holding a
+  // primary <p class="transcript-line"> and, when pinyinText is given, a
+  // second indented <p class="transcript-pinyin"> below it. A Chinese entry
+  // is therefore two rows tall where an English one is one - the scroll
+  // math below accounts for that rather than assuming a uniform row height.
+  function buildEntry(mainText, pinyinText) {
+    var entry = document.createElement("div");
+    entry.className = "transcript-entry upcoming";
+
+    var line = document.createElement("p");
+    line.className = "transcript-line";
+    line.textContent = mainText;
+    entry.appendChild(line);
+
+    if (pinyinText) {
+      var pinyinLine = document.createElement("p");
+      pinyinLine.className = "transcript-pinyin";
+      pinyinLine.textContent = pinyinText;
+      entry.appendChild(pinyinLine);
+    }
+
+    return entry;
+  }
+
   // targetEl: transcript panel (required). translationEl: Spanish
   // translation panel (optional - pass null to skip it entirely).
   function startTranscriptPolling(transcriptUrl, targetEl, translationEl, intervalMs) {
@@ -49,20 +73,16 @@
             var startedAt = line.started_at ? new Date(line.started_at) : null;
             var prefix = startedAt ? "[" + formatUtcTime(startedAt) + "] " : "";
 
-            var p = document.createElement("p");
-            p.className = "transcript-line upcoming";
-            p.textContent = prefix + line.text;
-            targetEl.appendChild(p);
+            var entry = buildEntry(prefix + line.text, line.pinyin);
+            targetEl.appendChild(entry);
 
-            var translationP = null;
+            var translationEntry = null;
             if (translationEl) {
-              translationP = document.createElement("p");
-              translationP.className = "transcript-line upcoming";
-              translationP.textContent = prefix + (line.translated_text || "…");
-              translationEl.appendChild(translationP);
+              translationEntry = buildEntry(prefix + (line.translated_text || "…"), null);
+              translationEl.appendChild(translationEntry);
             }
 
-            lines.push({ el: p, translationEl: translationP, startedAt: startedAt });
+            lines.push({ el: entry, translationEl: translationEntry, startedAt: startedAt });
           });
           targetEl.hidden = false;
           if (translationEl) translationEl.hidden = false;
@@ -80,13 +100,9 @@
       });
 
       lines.forEach(function(line, i) {
-        var className;
-        if (i < currentIndex) className = "transcript-line past";
-        else if (i === currentIndex) className = "transcript-line current";
-        else className = "transcript-line upcoming";
-
-        line.el.className = className;
-        if (line.translationEl) line.translationEl.className = className;
+        var state = i < currentIndex ? "past" : (i === currentIndex ? "current" : "upcoming");
+        line.el.className = "transcript-entry " + state;
+        if (line.translationEl) line.translationEl.className = "transcript-entry " + state;
       });
 
       if (currentIndex >= 0) {
@@ -96,9 +112,24 @@
     }
 
     function scrollToCurrent(panelEl, lines, currentIndex, getEl) {
-      var rowHeight = getEl(lines[currentIndex]).offsetHeight;
+      // The panel's fixed total height is always VISIBLE_ROWS single-line
+      // rows, measured off the current entry's primary line (always
+      // exactly one row) - not its full height, which may include a
+      // pinyin row.
+      var currentEntryEl = getEl(lines[currentIndex]);
+      var primaryLine = currentEntryEl.querySelector(".transcript-line") || currentEntryEl;
+      var rowHeight = primaryLine.offsetHeight;
       panelEl.style.height = (VISIBLE_ROWS * rowHeight) + "px";
-      var targetTop = (currentIndex - (CURRENT_ROW - 1)) * rowHeight;
+
+      // Scroll position: sum the actual (possibly two-row) heights of the
+      // CURRENT_ROW-1 entries immediately before the current one, so a
+      // taller Chinese+pinyin entry takes proportionally more of the
+      // window instead of assuming every entry is exactly one row tall.
+      var contextCount = CURRENT_ROW - 1;
+      var targetTop = 0;
+      for (var i = Math.max(0, currentIndex - contextCount); i < currentIndex; i++) {
+        targetTop += getEl(lines[i]).offsetHeight;
+      }
       panelEl.scrollTop = Math.max(0, targetTop);
     }
 
