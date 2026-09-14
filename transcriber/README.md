@@ -1,10 +1,12 @@
-# Live transcription prototype
+# Live transcription + translation prototype
 
 Local, real-time speech-to-text for a single radio station, using
 [faster-whisper](https://github.com/SYSTRAN/faster-whisper) (CPU, no
-external API/cost). Currently prototyped against **BBC World Service**
-(radio id may differ per database - check `Radio.find_by(name: "BBC World
-Service").id`).
+external API/cost), plus a local English->Spanish translation of each line
+using [Helsinki-NLP/opus-mt-en-es](https://huggingface.co/Helsinki-NLP/opus-mt-en-es)
+(MarianMT, also CPU/local - pass `--no-translate` to skip it). Currently
+prototyped against **BBC World Service** (radio id may differ per database -
+check `Radio.find_by(name: "BBC World Service").id`).
 
 This is intentionally a standalone script, not a Rails background job: it
 needs a long-lived ffmpeg subprocess and a loaded Whisper model, and this
@@ -38,8 +40,9 @@ TRANSCRIBE_TOKEN=some-shared-secret python3 transcriber/transcribe.py \
   --stream-url "http://stream.live.vc.bbcmedia.co.uk/bbc_world_service"
 ```
 
-Open that station's page and hit play - a transcript panel appears below
-the player once the first chunk comes back (every ~10s).
+Open that station's page and hit play - a transcript panel (and its Spanish
+translation, right below it) appears below the player once the first chunk
+comes back (every ~10s).
 
 ## Known limitations (it's a prototype)
 
@@ -49,3 +52,8 @@ the player once the first chunk comes back (every ~10s).
 - No speaker diarization, punctuation is Whisper's best guess.
 - CPU-only; `base.en` keeps up comfortably in real time on a modern
   multi-core machine, but a slower machine may want `tiny.en`.
+- Translation is per-chunk MarianMT, with no cross-chunk context, so it can
+  read a little disjointed where a sentence spans a chunk boundary - same
+  character as the English transcript itself.
+- Loading both models takes ~1 minute on first run (translation model
+  weights get cached locally after that).

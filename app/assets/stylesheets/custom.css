@@ -23,13 +23,17 @@ a.sign-up-button:hover {
    sentences are clipped with an ellipsis rather than wrapping, so the
    current line can reliably be kept at row 5 - see transcript.js, which
    sets the exact pixel height once it can measure a rendered row). */
-#transcript {
+#transcript, #translation {
   margin-top: 10px;
   padding: 4px 8px;
   background: #f5f5f5;
   border-radius: 4px;
   overflow: hidden;
   height: 9.8em; /* fallback before JS measures a row; ~7 * 1.4em */
+}
+
+#translation {
+  background: #eef6ff;
 }
 
 .transcript-line {

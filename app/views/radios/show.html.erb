@@ -46,8 +46,9 @@
   <div id="now-playing" hidden></div>
 </div>
 
-<%# Prototype: live local transcription, currently only wired up for BBC World Service. %>
+<%# Prototype: live local transcription (and Spanish translation), currently only wired up for BBC World Service. %>
 <div id="transcript" hidden></div>
+<div id="translation" hidden></div>
 
 <script>
   (function() {
@@ -87,11 +88,12 @@
     // hidden unless transcriber/transcribe.py is actually running for this
     // station.
     var transcriptEl = document.getElementById('transcript');
+    var translationEl = document.getElementById('translation');
     if (window.RadioGuguTranscript) {
       var stopTranscript = null;
       var transcriptUrl = '<%= transcript_radio_path(@radio) %>';
       audio.addEventListener('play', function() {
-        if (!stopTranscript) stopTranscript = window.RadioGuguTranscript.start(transcriptUrl, transcriptEl);
+        if (!stopTranscript) stopTranscript = window.RadioGuguTranscript.start(transcriptUrl, transcriptEl, translationEl);
       });
       audio.addEventListener('pause', function() {
         if (stopTranscript) { stopTranscript(); stopTranscript = null; }

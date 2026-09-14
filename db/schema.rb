@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_09_14_205147) do
+ActiveRecord::Schema[7.1].define(version: 2026_09_14_213532) do
   create_table "comments", force: :cascade do |t|
     t.text "body"
     t.integer "radio_id"
@@ -80,6 +80,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_09_14_205147) do
     t.datetime "ended_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "translated_text"
     t.index ["radio_id"], name: "index_transcripts_on_radio_id"
   end
 

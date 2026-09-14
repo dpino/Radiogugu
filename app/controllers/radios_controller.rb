@@ -77,7 +77,7 @@ class RadiosController < ApplicationController
 
     lines = radio.transcripts.where("id > ?", since_id).order(:id).limit(50)
     render json: {
-      lines: lines.map { |t| { id: t.id, text: t.text, started_at: t.started_at, ended_at: t.ended_at } },
+      lines: lines.map { |t| { id: t.id, text: t.text, translated_text: t.translated_text, started_at: t.started_at, ended_at: t.ended_at } },
     }
   end
 
@@ -93,6 +93,7 @@ class RadiosController < ApplicationController
     radio = Radio.find(params[:id])
     radio.transcripts.create!(
       text: params.require(:text),
+      translated_text: params[:translated_text],
       started_at: params[:started_at],
       ended_at: params[:ended_at]
     )
