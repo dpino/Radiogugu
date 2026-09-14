@@ -19,8 +19,27 @@ a.sign-up-button:hover {
   color: #53a3f6;
 }
 
+/* Fixed 7-row "teleprompter" window: each line is exactly one row (long
+   sentences are clipped with an ellipsis rather than wrapping, so the
+   current line can reliably be kept at row 5 - see transcript.js, which
+   sets the exact pixel height once it can measure a rendered row). */
+#transcript {
+  margin-top: 10px;
+  padding: 4px 8px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  overflow: hidden;
+  height: 9.8em; /* fallback before JS measures a row; ~7 * 1.4em */
+}
+
 .transcript-line {
-  margin: 0.3em 0;
+  margin: 0;
+  line-height: 1.4em;
+  height: 1.4em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: opacity 0.3s;
 }
 
 .transcript-line.past {
@@ -31,8 +50,25 @@ a.sign-up-button:hover {
   color: #000;
   font-weight: bold;
   background: #fff3b0;
-  padding: 2px 4px;
   border-radius: 3px;
+}
+
+/* Fade by distance from the current line (row 5) - farther away (either
+   direction) fades more; see transcript.js for how dist-N is assigned. */
+.transcript-line.dist-1 {
+  opacity: 0.82;
+}
+
+.transcript-line.dist-2 {
+  opacity: 0.64;
+}
+
+.transcript-line.dist-3 {
+  opacity: 0.46;
+}
+
+.transcript-line.dist-4 {
+  opacity: 0.3;
 }
 
 .transcript-line.upcoming {

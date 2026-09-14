@@ -14,6 +14,12 @@
 // playback position, so it's an approximation of "what's playing now", not
 // frame-accurate sync.
 (function() {
+  // The current line is kept at this row within the 7-row window (1-indexed):
+  // 4 lines of past context above it, the current line, 2 lines of upcoming
+  // text below it.
+  var CURRENT_ROW = 5;
+  var VISIBLE_ROWS = 7;
+
   function startTranscriptPolling(transcriptUrl, targetEl, intervalMs) {
     var sinceId = 0;
     var lines = []; // { el, startedAt, endedAt }
@@ -57,13 +63,26 @@
       });
 
       lines.forEach(function(line, i) {
-        if (i < currentIndex) line.el.className = "transcript-line past";
-        else if (i === currentIndex) line.el.className = "transcript-line current";
-        else line.el.className = "transcript-line upcoming";
+        var className;
+        if (i < currentIndex) className = "transcript-line past";
+        else if (i === currentIndex) className = "transcript-line current";
+        else className = "transcript-line upcoming";
+
+        // Fade by distance from the current line, capped at 4 (the number
+        // of past rows visible in the 7-row window) so anything further off
+        // screen just stays at the most-faded step rather than going
+        // fully transparent.
+        var distance = Math.min(4, Math.abs(i - currentIndex));
+        if (distance > 0) className += " dist-" + distance;
+
+        line.el.className = className;
       });
 
       if (currentIndex >= 0) {
-        lines[currentIndex].el.scrollIntoView({ block: "nearest" });
+        var rowHeight = lines[currentIndex].el.offsetHeight;
+        targetEl.style.height = (VISIBLE_ROWS * rowHeight) + "px";
+        var targetTop = (currentIndex - (CURRENT_ROW - 1)) * rowHeight;
+        targetEl.scrollTop = Math.max(0, targetTop);
       }
     }
 
