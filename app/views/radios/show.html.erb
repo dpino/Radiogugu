@@ -39,21 +39,10 @@
 <br/>
 
 <div id="radioplayer">
-    <object id="MediaPlayer"
-            codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=6,4,7,1112"
-            type="application/x-oleobject"
-            standby="Loading radio player..."
-            classid="CLSID:22D6f312-B0F6-11D0-94AB-0080C74C7E95"
-            height="50" width="150">
-
-        <embed type="application/x-mplayer2"
-                pluginspage="http://www.microsoft.com/Windows/Downloads/Contents/Products/MediaPlayer/"
-                src="<%= @radio.url %>"
-                transparentatstart="0" autostart="1" animationatstart="1"
-                showcontrols="true" showaudiocontrols="1" showpositioncontrols="0"
-                autosize="0" showstatusbar="1" displaysize="false"
-                height="52" width="300">
-    </object>
+  <audio controls preload="none" src="<%= @radio.url %>">
+    Your browser does not support playing audio streams directly.
+    You can still listen via the station's <%= link_to "stream URL", @radio.url %>.
+  </audio>
 </div>
 
 <%= render :partial => "ratings/rate", :locals => { :asset => @radio } %>
