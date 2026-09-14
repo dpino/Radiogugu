@@ -20,7 +20,7 @@
   var CURRENT_ROW = 5; // 1-indexed row, within the 7-row window, kept as "current"
   var VISIBLE_ROWS = 7;
   var PLAYBACK_DELAY_MS = 15000;
-  var DEFAULT_POLL_INTERVAL_MS = 2000;
+  var DEFAULT_POLL_INTERVAL_MS = 3000;
 
   // UTC, not the browser's local time zone: started_at is captured
   // server-side as UTC, and transcriber/transcribe.py's own terminal
