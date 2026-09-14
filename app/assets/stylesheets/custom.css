@@ -1,3 +1,18 @@
+a.sign-up-button {
+  float: right;
+  margin-right: 10px;
+  padding: 4px 12px;
+  background: #53a3f6;
+  color: white;
+  text-decoration: none;
+  border-radius: 3px;
+  font-weight: bold;
+}
+
+a.sign-up-button:hover {
+  background: #3b8de0;
+}
+
 // Radio stations
 ul.stations-list {
   list-style-position: inside;
@@ -5,7 +20,15 @@ ul.stations-list {
 }
 
 ul.stations-list > li {
-  list-style-image: url("img/arrow.png");
+  list-style: none;
+}
+
+ul.stations-list > li::before {
+  content: "\2192";
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
+  color: #53a3f6;
 }
 
 div.stations-nav-menu {
