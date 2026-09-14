@@ -19,6 +19,26 @@ a.sign-up-button:hover {
   color: #53a3f6;
 }
 
+.transcript-line {
+  margin: 0.3em 0;
+}
+
+.transcript-line.past {
+  color: #999;
+}
+
+.transcript-line.current {
+  color: #000;
+  font-weight: bold;
+  background: #fff3b0;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.transcript-line.upcoming {
+  color: #53a3f6;
+}
+
 // Radio stations
 ul.stations-list {
   list-style-position: inside;
