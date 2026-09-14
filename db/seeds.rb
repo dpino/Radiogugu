@@ -82,6 +82,8 @@ LOCATIONS = [
   { location: "Victoria", country: "Australia", continent: "Oceania" },
   { location: "Auckland", country: "New Zealand", continent: "Oceania" },
   { location: "Nationwide", country: "New Zealand", continent: "Oceania" },
+  { location: "Kanagawa", country: "Japan", continent: "Asia" },
+  { location: "Tokyo", country: "Japan", continent: "Asia" },
 ].freeze
 
 RADIOS = [
@@ -244,6 +246,26 @@ RADIOS = [
   { name: "Wandering Sheep Radio - Christian Smooth Jazz", website: "https://wsradio.net/", url: "http://radio.wanderingsheep.tv:8021/christianjazz", gender: "Christian", location_index: 73 },
   { name: "Newstalk ZB Wellington", website: "https://www.newstalkzb.co.nz/", url: "http://playerservices.streamtheworld.com/api/livestream-redirect/NZME_31AAC.m3u8", gender: "Local News", location_index: 74 },
   { name: "RNZ Pacific MP3", website: "https://www.rnz.co.nz/international", url: "http://radionz-ice.streamguys.com/international.mp3", gender: "Features", location_index: 73 },
+  { name: "R/a/dio", website: "http://r-a-d.io/", url: "https://relay0.r-a-d.io/main.mp3", gender: "Anime", location_index: 23 },
+  { name: "J1 Gold (HTTP)", website: "https://en.j1fm.tokyo/", url: "http://jenny.torontocast.com:8062/", gender: "Jpop", location_index: 23 },
+  { name: "Shonan Beach FM 78.9", website: "https://www.beachfm.co.jp/", url: "http://shonanbeachfm.out.airtime.pro:8000/shonanbeachfm_a", gender: "Classic Jazz", location_index: 75 },
+  { name: "Free FM Tokyo", website: "http://freefmradio.net/", url: "https://rocafmadrid.radioca.st/", gender: "Free Fm", location_index: 76 },
+  { name: "Free FM 80 Tokyo", website: "http://www.freefmworld.com/", url: "https://freefm80.radioca.st/", gender: "#80s", location_index: 76 },
+  { name: "J1 Hits (HTTP)", website: "https://en.j1fm.tokyo/", url: "http://jenny.torontocast.com:8056/", gender: nil, location_index: 23 },
+  { name: "BOX : Japan City Pop - 日本のシティポップ", website: "https://boxradio.net/", url: "https://play.streamafrica.net/japancitypop", gender: "City Pop", location_index: 23 },
+  { name: "Nightwave Plaza OPUS 96", website: "http://radio.plaza.one/", url: "http://radio.plaza.one/opus", gender: "Aesthetic", location_index: 23 },
+  { name: "Ottava", website: "https://ottava.jp/", url: "http://ottava2.out.airtime.pro:8000/ottava2_a", gender: "Classical", location_index: 76 },
+  { name: "Big B Radio - Jpop", website: "https://bigbradio.net/jpop", url: "https://antares.dribbcast.com/proxy/jpop?mp=/s", gender: "Music", location_index: 23 },
+  { name: "Súper Tokio Radio", website: "https://supertokio.com/", url: "https://streamer.radio.co/s83eb8ff39/listen", gender: "International", location_index: 23 },
+  { name: "Fred Film Radio(日本語)", website: "http://www.fred.fm/", url: "https://s10.webradio-hosting.com/proxy/fredradiojp/stream", gender: "Culture", location_index: 76 },
+  { name: "Moon Mission Recordings", website: "https://www.moonmission.jp/", url: "http://uk5.internet-radio.com:8306/", gender: "Deep House", location_index: 23 },
+  { name: "NHK-FM", website: "https://www.nhk.or.jp/radio/", url: "http://mnet.x10.mx/nhkfm.m3u8", gender: "Classical", location_index: 23 },
+  { name: "Nightwave Plaza MP3 182", website: "https://plaza.one/", url: "http://radio.plaza.one/mp3", gender: nil, location_index: 23 },
+  { name: "J-POP Powerplay", website: "http://www.asiadreamradio.com/stations/en/", url: "https://kathy.torontocast.com:3560/", gender: "Pop", location_index: 23 },
+  { name: "Listen.moe J-Pop (MP3)", website: "https://listen.moe/", url: "https://listen.moe/fallback", gender: nil, location_index: 23 },
+  { name: "OnlyHits Japan", website: "https://j.onlyhit.us/", url: "https://j.onlyhit.us/play", gender: nil, location_index: 23 },
+  { name: "J-Rock Powerplay(Asia DREAM Radio)", website: "http://asiadreamradio.torontocast.stream/stations/en/index.html", url: "https://kathy.torontocast.com:3340/;?shoutcast", gender: "Music", location_index: 23 },
+  { name: "J1 HITS", website: "https://www.j1fm.tokyo/", url: "https://jenny.torontocast.com:2000/stream/J1HITS?_=184325", gender: nil, location_index: 76 },
 ].freeze
 
 created_locations = LOCATIONS.map do |attrs|
