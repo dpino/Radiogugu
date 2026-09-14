@@ -88,7 +88,9 @@
           if (translationEl) translationEl.hidden = false;
           highlightCurrentLine();
         })
-        .catch(function() {});
+        .catch(function(err) {
+          console.error("RadioGuguTranscript poll failed:", err);
+        });
     }
 
     function highlightCurrentLine() {
@@ -133,12 +135,27 @@
       panelEl.scrollTop = Math.max(0, targetTop);
     }
 
+    // Chrome (more aggressively than Firefox) throttles/pauses setInterval
+    // timers in tabs that lose focus, so polling can silently stop while
+    // you're looking at another window - the server keeps producing data
+    // fine the whole time, the display just stops catching up. Force an
+    // immediate resync the moment the tab becomes visible again rather
+    // than waiting for a possibly-throttled timer to resume on its own.
+    function onVisible() {
+      if (document.visibilityState === "visible") {
+        poll();
+        highlightCurrentLine();
+      }
+    }
+    document.addEventListener("visibilitychange", onVisible);
+
     poll();
     var pollTimer = setInterval(poll, intervalMs || DEFAULT_POLL_INTERVAL_MS);
     var clockTimer = setInterval(highlightCurrentLine, 1000);
     return function stop() {
       clearInterval(pollTimer);
       clearInterval(clockTimer);
+      document.removeEventListener("visibilitychange", onVisible);
     };
   }
 
