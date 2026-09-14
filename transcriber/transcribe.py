@@ -6,10 +6,14 @@ station.
 Opens ONE persistent connection to the stream with ffmpeg and reads it as a
 continuous raw PCM feed, slicing off fixed-size chunks as they arrive in
 real time and transcribing each locally with faster-whisper (no external
-API, no network dependency once the models are downloaded). Each chunk is
-also translated locally with Helsinki-NLP/opus-mt-en-es (MarianMT) unless
---no-translate is passed. Both are POSTed to the Rails app together, which
-stores them and serves them to the station's page.
+API, no network dependency once the models are downloaded; pass --model to
+pick a multilingual checkpoint like "small" for a non-English station - the
+default "base.en" is English-only). Each chunk is also translated locally
+with one or more MarianMT models (--translation-model, default
+Helsinki-NLP/opus-mt-en-es; comma-separate a chain, e.g. zh->en,en->es, for
+source languages with no direct ->es model) unless --no-translate is
+passed. Both are POSTed to the Rails app together, which stores them and
+serves them to the station's page.
 
 Earlier version reconnected fresh (`ffmpeg -i url -t 10 ...`) for every
 chunk. That turned out to be a real bug, not just inefficient: many live
@@ -82,6 +86,14 @@ def translate(tokenizer, model, text):
     return tokenizer.batch_decode(generated, skip_special_tokens=True)[0]
 
 
+def translate_chain(chain, text):
+    """chain: list of (tokenizer, model) pairs applied in sequence - e.g.
+    zh->en then en->es for a source language with no direct ->es model."""
+    for tokenizer, model in chain:
+        text = translate(tokenizer, model, text)
+    return text
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--radio-id", type=int, required=True)
@@ -89,8 +101,14 @@ def main():
     parser.add_argument("--base-url", default=os.environ.get("RAILS_BASE_URL", "http://localhost:3000"))
     parser.add_argument("--model", default=os.environ.get("WHISPER_MODEL", "base.en"))
     parser.add_argument("--chunk-seconds", type=int, default=10)
-    parser.add_argument("--translation-model", default=os.environ.get("TRANSLATION_MODEL", "Helsinki-NLP/opus-mt-en-es"))
-    parser.add_argument("--no-translate", action="store_true", help="Skip loading the translation model entirely")
+    parser.add_argument(
+        "--translation-model",
+        default=os.environ.get("TRANSLATION_MODEL", "Helsinki-NLP/opus-mt-en-es"),
+        help="Comma-separated chain of MarianMT models applied in sequence, e.g. "
+             "'Helsinki-NLP/opus-mt-zh-en,Helsinki-NLP/opus-mt-en-es' for a source "
+             "language with no direct ->es model.",
+    )
+    parser.add_argument("--no-translate", action="store_true", help="Skip loading the translation model(s) entirely")
     args = parser.parse_args()
 
     token = os.environ.get("TRANSCRIBE_TOKEN")
@@ -102,11 +120,15 @@ def main():
     print(f"Loading Whisper model '{args.model}'...", flush=True)
     model = WhisperModel(args.model, device="cpu", compute_type="int8")
 
-    translator = None
+    translation_chain = []
     if not args.no_translate:
-        print(f"Loading translation model '{args.translation_model}'...", flush=True)
-        translator_tokenizer = MarianTokenizer.from_pretrained(args.translation_model)
-        translator = MarianMTModel.from_pretrained(args.translation_model)
+        for model_name in args.translation_model.split(","):
+            model_name = model_name.strip()
+            print(f"Loading translation model '{model_name}'...", flush=True)
+            translation_chain.append((
+                MarianTokenizer.from_pretrained(model_name),
+                MarianMTModel.from_pretrained(model_name),
+            ))
 
     print("Model(s) loaded. Starting transcription loop (Ctrl-C to stop).", flush=True)
 
@@ -134,8 +156,8 @@ def main():
                 continue
 
             translated_text = None
-            if translator:
-                translated_text = translate(translator_tokenizer, translator, text)
+            if translation_chain:
+                translated_text = translate_chain(translation_chain, text)
 
             print(f"[{started_at.strftime('%H:%M:%S')}] {text}", flush=True)
             if translated_text:
