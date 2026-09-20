@@ -32,5 +32,18 @@ module Radiogugu
     config.generators.system_tests = nil
 
     config.action_mailer.default_url_options = { host: "localhost:3000" }
+
+    # When deployed behind a reverse proxy at a sub-path (e.g. /radiogugu),
+    # RAILS_RELATIVE_URL_ROOT alone only affects asset URLs and out-of-request
+    # url_for calls. Controller-driven path/url helpers read SCRIPT_NAME off
+    # the live request instead, which is empty because the proxy strips the
+    # prefix before forwarding - so it has to be set explicitly here.
+    if ENV["RAILS_RELATIVE_URL_ROOT"].present?
+      script_name = ENV["RAILS_RELATIVE_URL_ROOT"]
+      config.middleware.use(Class.new do
+        define_method(:initialize) { |app| @app = app }
+        define_method(:call) { |env| @app.call(env.merge("SCRIPT_NAME" => script_name)) }
+      end)
+    end
   end
 end
