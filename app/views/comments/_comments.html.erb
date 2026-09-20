@@ -39,7 +39,7 @@ function addComment() {
 
   $.ajax({
       type: "POST",
-      url: '/radios/###radio_id###/comments/'.replace('###radio_id###', radio_id),
+      url: '<%= Rails.application.routes.relative_url_root %>/radios/###radio_id###/comments/'.replace('###radio_id###', radio_id),
       data: {comment: comment},
       dataType: 'json',
       success: function(commentObj) {

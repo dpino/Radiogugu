@@ -29,7 +29,7 @@
 
      $.ajax({
       type: "POST",
-      url: '/ratings/rate',
+      url: '<%= ratings_rate_path %>',
       data: {id: radio_id, rating: rating},
       dataType: 'json',
       success: function(average_rating) {

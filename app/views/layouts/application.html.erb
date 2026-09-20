@@ -13,6 +13,10 @@
   <%= stylesheet_link_tag "application" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tag %>
+  <meta name="url-root" content="<%= Rails.application.routes.relative_url_root %>" />
+  <!-- radiogugu.js reads url-root to prefix its hardcoded AJAX paths when this app
+       is deployed behind a reverse proxy at a sub-path (e.g. /radiogugu). -->
+
 
   <style type="text/css">
     /*<![CDATA[*/

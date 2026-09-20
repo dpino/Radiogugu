@@ -6,6 +6,13 @@
 // Substitutes node with a new node
 $.fn.replace = function(o) { return this.after(o).remove(); };
 
+// Prefix for hardcoded AJAX paths below, so they still resolve when this app
+// is deployed behind a reverse proxy at a sub-path (e.g. /radiogugu).
+function urlRoot() {
+  var meta = document.querySelector('meta[name="url-root"]');
+  return (meta && meta.content) || '';
+}
+
 $(document).ready(function() {
 
   $('#add-to-favorites').click(addRadio);
@@ -27,7 +34,7 @@ $(document).ready(function() {
   function removeRadioFromFavorites(node, radio_id) {
     $.ajax({
       type: "GET",
-      url: '/favorites/remove/' + radio_id,
+      url: urlRoot() + '/favorites/remove/' + radio_id,
       dataType: 'json',
       success: function(result) {
         var color = "green";
@@ -54,7 +61,7 @@ $(document).ready(function() {
   function addRadioToFavorites(node, radio_id) {
     $.ajax({
       type: "GET",
-      url: '/favorites/add/' + radio_id,
+      url: urlRoot() + '/favorites/add/' + radio_id,
       dataType: 'json',
       success: function(result) {
         // Save previous style
@@ -105,7 +112,7 @@ $(document).ready(function() {
   function saveRadioStation(id, radio) {
     $.ajax({
       type: "POST",
-      url: '/radios/' + id + '.json',
+      url: urlRoot() + '/radios/' + id + '.json',
       data: {_method:'PUT', radio: radio},
       dataType: 'json',
       success: function(result) {
